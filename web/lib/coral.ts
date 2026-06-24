@@ -1,15 +1,16 @@
-// Lazy CoralClient singleton — reuses one instance per page load.
-// Uses require() to avoid SSR issues with the SDK's browser-only fetch usage.
+// Lazy CoralClient singleton — one instance per page load.
+//
+// We import the source TypeScript directly so Next.js (Webpack) can bundle it
+// without needing to build the SDK separately. The relative path reaches the
+// monorepo sibling package from web/.
+import { CoralClient } from '../../../typescript_sdk/sdk/src/client'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-let _client: import('../../../typescript_sdk/sdk/src/client').CoralClient | null = null
+let _client: CoralClient | null = null
 
-export function getClient() {
+export function getClient(): CoralClient {
   if (!_client) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { CoralClient } = require('../../../typescript_sdk/sdk/src/client') as typeof import('../../../typescript_sdk/sdk/src/client')
     const baseUrl = process.env.NEXT_PUBLIC_CORAL_SERVER ?? 'http://localhost:8080'
     _client = new CoralClient(baseUrl)
   }
-  return _client!
+  return _client
 }
