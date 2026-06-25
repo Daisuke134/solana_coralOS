@@ -10,7 +10,7 @@
  * - `PRICE_SOL`        — price per request in SOL (default `"0.0001"`)
  * - `CORAL_CONNECTION_URL` — CoralOS MCP server URL
  */
-import { startCoralAgent } from '@pay/agent-core-ts'
+import { startCoralAgent } from '@pay/agent-runtime'
 import { generatePaymentUrl, verifyPayment } from './payment.js'
 import { deliverService } from './service.js'
 

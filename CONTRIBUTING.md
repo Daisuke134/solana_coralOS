@@ -6,8 +6,8 @@ Contributions are welcome. The `main` branch is the integration branch — targe
 
 | Directory | Language | Typical changes |
 |-----------|----------|-----------------|
-| `sdk/agent-core-ts/` | TypeScript | New strategies, Solana Pay logic, messaging, workflows |
-| `api-ts/` | TypeScript (Express) | New REST endpoints, handler logic |
+| `sdk/agent-runtime/` | TypeScript | New strategies, Solana Pay logic, messaging, workflows |
+| `api-server/` | TypeScript (Express) | New REST endpoints, handler logic |
 | `sdk/coral-client/` | TypeScript | CoralClient HTTP wrapper |
 | `web/` | TypeScript (Next.js) | Consumer marketplace UI |
 | `coral-agents/` | Python | CoralOS MCP agents |
@@ -23,9 +23,9 @@ Contributions are welcome. The `main` branch is the integration branch — targe
 ### TypeScript
 
 ```sh
-cd api-ts && npm install && npm run dev    # Express API on :8081
+cd api-server && npm install && npm run dev    # Express API on :8081
 cd web && npm install && npm run dev       # Next.js on :3000
-cd sdk/agent-core-ts && npm run typecheck
+cd sdk/agent-runtime && npm run typecheck
 ```
 
 ## PR Workflow
@@ -39,7 +39,7 @@ cd sdk/agent-core-ts && npm run typecheck
 
 ## Code Style
 
-- **TypeScript:** run `npm run typecheck && npm test` in `sdk/agent-core-ts/` and `api-ts/` before committing.
+- **TypeScript:** run `npm run typecheck && npm test` in `sdk/agent-runtime/` and `api-server/` before committing.
 - **Documentation:** READMEs should explain *why* a module exists, not just *what* it does.
 
 ## Security

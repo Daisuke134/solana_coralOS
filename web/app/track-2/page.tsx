@@ -53,7 +53,7 @@ export default function Track3Page() {
       // Wait for confirmation
       await connection.confirmTransaction(sig, 'confirmed')
 
-      // Call api-ts to deliver the service
+      // Call api-server to deliver the service
       setStep('confirming')
       const deliveryRes = await fetch(`${API}/api/v1/weather`, {
         method: 'POST',

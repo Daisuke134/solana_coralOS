@@ -4,7 +4,7 @@
 #
 # Usage: bash build-agents.sh            (build all)
 #        bash build-agents.sh seller     (seller-agent only)
-#        bash build-agents.sh api        (api-ts only)
+#        bash build-agents.sh api        (api-server only)
 #        bash build-agents.sh web        (web only)
 
 set -e
@@ -38,12 +38,12 @@ build_proxy() {
 }
 
 build_api() {
-  echo "==> Building api-ts:latest"
+  echo "==> Building api-server:latest"
   docker build \
-    -f "$ROOT/api-ts/Dockerfile" \
-    -t api-ts:latest \
+    -f "$ROOT/api-server/Dockerfile" \
+    -t api-server:latest \
     "$ROOT"
-  echo "    api-ts:latest done"
+  echo "    api-server:latest done"
 }
 
 build_web() {

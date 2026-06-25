@@ -64,7 +64,7 @@ export default function Track1Page() {
   const [cycles, setCycles] = useState(0)
   const feedRef = useRef<HTMLDivElement>(null)
 
-  // Poll api-ts for agent state
+  // Poll api-server for agent state
   useEffect(() => {
     const poll = async () => {
       try {

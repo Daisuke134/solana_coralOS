@@ -1,4 +1,4 @@
-// Re-export all shared types from agent-core-ts inline (no peer dep for portability)
+// Re-export all shared types from agent-runtime inline (no peer dep for portability)
 
 export interface CoralMention {
   threadId?: string

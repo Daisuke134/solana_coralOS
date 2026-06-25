@@ -1,5 +1,5 @@
 {
-  "name": "agent-server",
+  "name": "api-server",
   "version": "0.1.0",
   "description": "Node.js HTTP server wrapping TypeScript agent strategies — drop-in replacement for coral-server",
   "type": "module",

@@ -12,7 +12,7 @@
  *   2. logs "got: <text>"
  *   3. the thread shows "echo: <text>" back
  */
-import { startCoralAgent } from '@pay/agent-core-ts'
+import { startCoralAgent } from '@pay/agent-runtime'
 
 await startCoralAgent({ agentName: 'echo-agent' }, async (ctx) => {
   console.error('[echo-agent] waiting for mentions')

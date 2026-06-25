@@ -126,7 +126,7 @@ export default function ResultPage() {
               <p className="text-gray-500 text-xs">
                 Start the API server:{' '}
                 <span className="font-mono bg-[#0d0d15] px-1.5 py-0.5 rounded text-gray-400">
-                  cd api-ts && npm run dev
+                  cd api-server && npm run dev
                 </span>
               </p>
             </div>

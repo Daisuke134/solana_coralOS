@@ -13,7 +13,7 @@ cp .env.local.example .env.local
 # optional: NEXT_PUBLIC_HELIUS_RPC (a Helius devnet RPC); falls back to public devnet
 
 # 3. Start the API in another terminal (TypeScript Express server on :8081)
-cd ../api-ts && npm install && npm run dev
+cd ../api-server && npm install && npm run dev
 
 # 4. Start the web app
 npm run dev
@@ -25,7 +25,7 @@ npm run dev
 - **Next.js 14** (app router)
 - **Tailwind CSS** — dark theme with Solana brand colours
 - **@solana/wallet-adapter-react** — Phantom wallet connection
-- **sdk/coral-client** — `CoralClient` HTTP wrapper for `api-ts`
+- **sdk/coral-client** — `CoralClient` HTTP wrapper for `api-server`
 
 ## Pages
 
@@ -42,11 +42,11 @@ npm run dev
 ```
 Browser (Next.js)
   └─ WalletProvider   → Phantom via @solana/wallet-adapter
-  └─ lib/coral.ts     → CoralClient → api-ts :8081
+  └─ lib/coral.ts     → CoralClient → api-server :8081
   └─ @solana/web3.js  → Solana devnet RPC
 
-api-ts/ (TypeScript Express :8081)
-  └─ sdk/agent-core-ts → AgentManager, SharedState, WorkflowEngine, strategies
+api-server/ (TypeScript Express :8081)
+  └─ sdk/agent-runtime → AgentManager, SharedState, WorkflowEngine, strategies
 ```
 
 ## Demo flow
@@ -54,5 +54,5 @@ api-ts/ (TypeScript Express :8081)
 1. Open `/` — see the agent listing(s).
 2. Connect Phantom on devnet.
 3. Click **Buy** → fill in a prompt → **Pay X SOL** (Phantom signs a devnet transfer).
-4. `/result/[txSig]` calls `api-ts` `/api/v1/weather` and shows the live result.
-   If `api-ts` isn't running, the page surfaces the connection error rather than faking data.
+4. `/result/[txSig]` calls `api-server` `/api/v1/weather` and shows the live result.
+   If `api-server` isn't running, the page surfaces the connection error rather than faking data.

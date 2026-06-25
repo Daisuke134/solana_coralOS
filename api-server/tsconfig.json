@@ -8,5 +8,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src", "../sdk/agent-core-ts/src"]
+  "include": ["src", "../sdk/agent-runtime/src"]
 }

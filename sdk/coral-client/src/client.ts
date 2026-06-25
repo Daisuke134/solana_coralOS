@@ -1,7 +1,7 @@
 /**
- * `CoralClient` — typed HTTP wrapper for the `api-ts` Express server.
+ * `CoralClient` — typed HTTP wrapper for the `api-server` Express server.
  *
- * Exposes every `api-ts` route as an async method. Instantiate with the server's
+ * Exposes every `api-server` route as an async method. Instantiate with the server's
  * base URL and pass it around instead of calling `fetch` directly.
  *
  * @example
@@ -17,7 +17,7 @@ import type {
 export class CoralClient {
   private base: string
 
-  /** @param baseUrl - Base URL of the `api-ts` server. Defaults to `http://localhost:8081`. */
+  /** @param baseUrl - Base URL of the `api-server` server. Defaults to `http://localhost:8081`. */
   constructor(baseUrl = 'http://localhost:8081') {
     this.base = baseUrl.replace(/\/$/, '')
   }

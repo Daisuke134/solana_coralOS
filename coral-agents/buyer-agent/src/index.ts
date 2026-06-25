@@ -15,7 +15,7 @@
  * - `ANTHROPIC_API_KEY` — optional; analysis step is skipped if absent
  */
 import Anthropic from '@anthropic-ai/sdk'
-import { startCoralAgent } from '@pay/agent-core-ts'
+import { startCoralAgent } from '@pay/agent-runtime'
 import { payFromUrl, getBuyerPublicKey } from './wallet.js'
 import { BUYER_GOAL, BUYER_REQUEST, BUYER_MAX_SOL, CYCLE_INTERVAL_MS } from './goal.js'
 

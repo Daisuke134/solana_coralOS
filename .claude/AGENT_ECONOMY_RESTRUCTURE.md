@@ -215,8 +215,8 @@ settlement (Gate B) into one continuous loop **coordinated by stock CoralOS**.
 
 - **Docker is now required** (coral-server uses the Docker socket). Accepted; the `quickstart/`
   no-Docker mode is the mitigation for fast onboarding.
-- **Bridge home:** standalone in the track (recommended — keeps `api-ts` light) vs. folded into
-  `api-ts` (already has the runtime). Going standalone.
+- **Bridge home:** standalone in the track (recommended — keeps `api-server` light) vs. folded into
+  `api-server` (already has the runtime). Going standalone.
 - **Session lifecycle (human):** reuse one long-lived `[seller-agent, user-proxy]` session, one
   thread per order. Simpler than create-per-order; the memo namespaces orders.
 - **Web nav:** one `/economy` page with an *Autonomous | Checkout* toggle (recommended) — keeps the

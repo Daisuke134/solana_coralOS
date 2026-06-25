@@ -562,7 +562,7 @@ const active = await client.getCoralMcpStatus('rust-coral-agent')
 
 ## Exported Types
 
-All types are re-exported from `@pay/coral-client`. They mirror the Rust structs and are compatible with `@pay/agent-core-ts` types (same field names, same shapes).
+All types are re-exported from `@pay/coral-client`. They mirror the Rust structs and are compatible with `@pay/agent-runtime` types (same field names, same shapes).
 
 ```typescript
 import type {

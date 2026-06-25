@@ -39,8 +39,8 @@ Adds five slash commands for working with CoralOS multi-agent sessions.
 | Coral Skill | This Repo |
 |-------------|-----------|
 | `/coral-setup` | Starts the CoralOS Docker container that provides `CORAL_CONNECTION_URL` to `coral-agents/` |
-| `/coral-agent-swarm` | Drives `CoralMcpAgent` in `sdk/agent-core-ts/src/coral_mcp.ts` |
-| `/coralize-your-agent` | Connects a new strategy to `POST /api/v1/agents/:id/handle` in `api-ts/` |
+| `/coral-agent-swarm` | Drives `CoralMcpAgent` in `sdk/agent-runtime/src/coral_mcp.ts` |
+| `/coralize-your-agent` | Connects a new strategy to `POST /api/v1/agents/:id/handle` in `api-server/` |
 
 - Use `/coral-built-in-agent-setup` to add the Puppet agent alongside your TypeScript agents
 - Use `/coralize-your-agent` when you fork and want to wire a new custom agent into the swarm
@@ -72,8 +72,8 @@ Adds Solana ecosystem knowledge and tooling to Claude Code — SDK usage, Anchor
 | Solana Skill | Where it helps |
 |--------------|---------------|
 | Anchor framework | Write a custom escrow program for trustless agent-to-agent payments |
-| `@solana/kit` | Upgrade `sdk/agent-core-ts` from legacy `@solana/web3.js` to the modern kit |
-| LiteSVM | Unit-test `sdk/agent-core-ts/src/strategies/` without a live devnet |
+| `@solana/kit` | Upgrade `sdk/agent-runtime` from legacy `@solana/web3.js` to the modern kit |
+| LiteSVM | Unit-test `sdk/agent-runtime/src/strategies/` without a live devnet |
 | Commerce Kit | Add a checkout flow to `web/` so humans can pay agents from a browser |
 | Token-2022 | Accept USDC or other SPL tokens as payment instead of native SOL |
 | Codama | Auto-generate TypeScript types from a custom Anchor program IDL |
@@ -89,7 +89,7 @@ Adds Solana ecosystem knowledge and tooling to Claude Code — SDK usage, Anchor
 /coral-setup
 
 # 2. Start the TypeScript API
-cd api-ts && npm run dev
+cd api-server && npm run dev
 
 # 3. Start the web frontend
 cd web && npm run dev
@@ -112,7 +112,7 @@ After installing the Solana dev skill, Claude Code will automatically activate A
 "Generate TypeScript client types from my Anchor IDL"
 ```
 
-The program would live at `programs/escrow/src/lib.rs` and plug into `sdk/agent-core-ts/src/strategies/` as an `AnchorEscrowStrategy`.
+The program would live at `programs/escrow/src/lib.rs` and plug into `sdk/agent-runtime/src/strategies/` as an `AnchorEscrowStrategy`.
 
 ---
 
@@ -137,7 +137,7 @@ programs/
     src/lib.rs          ← Anchor program (deposit, claim instructions)
     Cargo.toml
 
-sdk/agent-core-ts/src/strategies/
+sdk/agent-runtime/src/strategies/
   anchor_escrow.ts      ← TypeScript strategy using @coral-xyz/anchor
 ```
 

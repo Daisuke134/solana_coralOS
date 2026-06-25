@@ -7,7 +7,7 @@
  * that decides to pay."
  *
  * Lives in buyer-agent (not the core SDK) because it depends on `@anthropic-ai/sdk`; keeping
- * the LLM dependency out of `agent-core-ts` keeps the core runtime lightweight.
+ * the LLM dependency out of `agent-runtime` keeps the core runtime lightweight.
  *
  * Three safety properties that make this production-shaped rather than a toy:
  *   1. The tool-use loop is BOUNDED (maxTurns) — an agent that can loop forever is a liability.
@@ -15,7 +15,7 @@
  *   3. The model can only pay values from a REAL challenge — no hallucinated recipients/amounts.
  */
 import Anthropic from '@anthropic-ai/sdk'
-import { BaseStrategy, type MutableAgentState, untilAborted } from '@pay/agent-core-ts'
+import { BaseStrategy, type MutableAgentState, untilAborted } from '@pay/agent-runtime'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 import { signTransfer } from './wallet.js'
 

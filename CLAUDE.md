@@ -12,9 +12,9 @@ A TypeScript-first monorepo for a Solana agent-economy starter kit. Agents reque
 |-----------|---------|
 | `examples/agent-economy/` | **The track.** `autonomous/` (agent↔agent starter), `bridge/` (human→user-proxy Phantom front door), `config/coral.toml` (wallet-free MCP config), `quickstart/` (no-Docker bare-metal 402) |
 | `coral-agents/` | Agents coral-server launches: `seller-agent` (fork `service.ts`), `buyer-agent`, `echo-agent` (TypeScript); `user_proxy` (Python — the human's session stand-in, driven via the puppet API) |
-| `api-ts/` | Express REST API — secondary server (port 8081) |
-| `sdk/agent-core-ts/` | TypeScript agent runtime: `AgentManager`, `Strategy`, `MessageBus`, `SharedState`, `WorkflowEngine`, CoralOS MCP client, Solana Pay strategies |
-| `sdk/coral-client/` | `CoralClient` — typed HTTP wrapper for `api-ts/` |
+| `api-server/` | Express REST API — secondary server (port 8081) |
+| `sdk/agent-runtime/` | TypeScript agent runtime: `AgentManager`, `Strategy`, `MessageBus`, `SharedState`, `WorkflowEngine`, CoralOS MCP client, Solana Pay strategies |
+| `sdk/coral-client/` | `CoralClient` — typed HTTP wrapper for `api-server/` |
 | `web/` | Next.js marketplace UI — Phantom wallet flow (port 3000) |
 | `docs/`, `.claude/` | Design documents + the `AGENT_ECONOMY_RESTRUCTURE.md` plan (gates G1–G3) |
 | `e2e/` | Playwright end-to-end tests |
@@ -24,28 +24,28 @@ coordination layer only — payments settle agent-side in SOL (no coral-server w
 
 ## Commands
 
-### api-ts (primary server)
+### api-server (primary server)
 
 ```sh
-cd api-ts && npm install   # once
-cd api-ts && npm run dev   # dev server on :8081 with hot reload
-cd api-ts && npm test      # unit tests
-cd api-ts && npm run typecheck
+cd api-server && npm install   # once
+cd api-server && npm run dev   # dev server on :8081 with hot reload
+cd api-server && npm test      # unit tests
+cd api-server && npm run typecheck
 ```
 
-### sdk/agent-core-ts (agent runtime)
+### sdk/agent-runtime (agent runtime)
 
 ```sh
-cd sdk/agent-core-ts && npm install
-cd sdk/agent-core-ts && npm run typecheck
-cd sdk/agent-core-ts && npm test
+cd sdk/agent-runtime && npm install
+cd sdk/agent-runtime && npm run typecheck
+cd sdk/agent-runtime && npm test
 ```
 
 ### web (Next.js)
 
 ```sh
 cd web && npm install
-cd web && npm run dev      # :3000, points at api-ts :8081 by default
+cd web && npm run dev      # :3000, points at api-server :8081 by default
 cd web && npm run build
 ```
 
@@ -61,7 +61,7 @@ cd coral-agents/user_proxy && docker build -t user-proxy:0.1.0 .   # Python test
 
 ## Architecture
 
-### sdk/agent-core-ts
+### sdk/agent-runtime
 
 The central TypeScript library. Key modules:
 
@@ -74,9 +74,9 @@ The central TypeScript library. Key modules:
 - **`coral_mcp.ts`** — MCP client for joining CoralOS sessions
 - **`strategies/`** — `HeliusMonitorStrategy`, `TransferStrategy`, `PaymentStrategy`, `WeatherStrategy`, `IdleStrategy`
 
-### api-ts
+### api-server
 
-Express server exposing `sdk/agent-core-ts` over HTTP at `/api/v1/`:
+Express server exposing `sdk/agent-runtime` over HTTP at `/api/v1/`:
 - `/agents` — CRUD + start/stop/handle
 - `/shared-state` — key-value read/write
 - `/messages` — message bus
@@ -84,14 +84,14 @@ Express server exposing `sdk/agent-core-ts` over HTTP at `/api/v1/`:
 
 ### web
 
-Next.js 14 marketplace. Connects to `api-ts` via `NEXT_PUBLIC_CORAL_SERVER` (default `http://localhost:8081`).
+Next.js 14 marketplace. Connects to `api-server` via `NEXT_PUBLIC_CORAL_SERVER` (default `http://localhost:8081`).
 
 ### coral-agents (CoralOS)
 
-`buyer-agent`, `seller-agent`, `echo-agent` — TypeScript agents (built on `sdk/agent-core-ts`).  
+`buyer-agent`, `seller-agent`, `echo-agent` — TypeScript agents (built on `sdk/agent-runtime`).  
 `user_proxy` — Python puppet agent; lets the Puppet API inject test messages into a CoralOS session.
 
-(On-chain wallet monitoring lives in the TypeScript `HeliusMonitorStrategy` in `sdk/agent-core-ts`.)
+(On-chain wallet monitoring lives in the TypeScript `HeliusMonitorStrategy` in `sdk/agent-runtime`.)
 
 ## Key Constraints
 

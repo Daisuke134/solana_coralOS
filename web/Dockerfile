@@ -12,7 +12,7 @@ COPY web/package*.json ./web/
 RUN cd web && npm install
 COPY web/ ./web/
 ARG NEXT_PUBLIC_CORAL_SERVER=http://coral:5555
-ARG NEXT_PUBLIC_API_SERVER=http://api-ts:8081
+ARG NEXT_PUBLIC_API_SERVER=http://api-server:8081
 ARG NEXT_PUBLIC_SELLER_WALLET=""
 ARG NEXT_PUBLIC_PRICE_SOL=""
 RUN cd web && npm run build

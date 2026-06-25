@@ -1,5 +1,5 @@
 // Mirror of all Rust structs — identical field names (snake_case to match API responses).
-// These types are shared between agent-core-ts (runtime) and sdk (HTTP client).
+// These types are shared between agent-runtime (runtime) and sdk (HTTP client).
 
 /** A single event recorded in an agent's action log. */
 export interface AgentAction {

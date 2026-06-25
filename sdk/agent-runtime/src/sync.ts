@@ -1,7 +1,7 @@
 import type { AgentManager } from './manager.js'
 
 /**
- * Optional bridge that makes TypeScript agents visible in a running `api-ts` server
+ * Optional bridge that makes TypeScript agents visible in a running `api-server` server
  * (or any compatible coral-server) and mirrors inbound messages to the local bus.
  *
  * Call `attach()` once after the server is up. It registers every local agent via

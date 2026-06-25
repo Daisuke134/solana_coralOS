@@ -1,4 +1,4 @@
-# @pay/agent-core-ts
+# @pay/agent-runtime
 
 TypeScript multi-agent runtime that mirrors the Rust `agent-core` library concept-for-concept. Use this package to build and run Solana-aware agents entirely in Node.js or the browser. It pairs with `@pay/coral-client` (the HTTP client for coral-server) and with `CoralMcpAgent` for CoralOS MCP sessions.
 
@@ -52,7 +52,7 @@ import {
   AgentManager,
   RpcPollStrategy,
   AgentRole,
-} from '@pay/agent-core-ts'
+} from '@pay/agent-runtime'
 
 const manager = new AgentManager()
 
@@ -91,7 +91,7 @@ All field names use **snake_case** to match the JSON API responses from coral-se
 ## Class: Agent
 
 ```typescript
-import { Agent } from '@pay/agent-core-ts'
+import { Agent } from '@pay/agent-runtime'
 ```
 
 ### Constructor
@@ -180,7 +180,7 @@ agent.stop()
 ## Class: AgentManager
 
 ```typescript
-import { AgentManager } from '@pay/agent-core-ts'
+import { AgentManager } from '@pay/agent-runtime'
 ```
 
 The top-level orchestrator. Owns all agents plus shared infrastructure.
@@ -288,7 +288,7 @@ Registers a workflow with the `WorkflowEngine`.
 ## Class: MessageBus
 
 ```typescript
-import { MessageBus } from '@pay/agent-core-ts'
+import { MessageBus } from '@pay/agent-runtime'
 ```
 
 In-memory ring buffer (max 1 000 messages) with broadcast and direct delivery semantics.
@@ -340,7 +340,7 @@ const thread = bus.getConversation('leader', 'worker-1')
 ## Class: SharedState
 
 ```typescript
-import { SharedState } from '@pay/agent-core-ts'
+import { SharedState } from '@pay/agent-runtime'
 ```
 
 Versioned key-value store with a 500-entry change history. Values are typed as `unknown` to allow any JSON-serialisable data.
@@ -392,7 +392,7 @@ changes.filter(c => c.key === 'market-price').forEach(c => {
 ## Class: WorkflowEngine
 
 ```typescript
-import { WorkflowEngine } from '@pay/agent-core-ts'
+import { WorkflowEngine } from '@pay/agent-runtime'
 ```
 
 DAG workflow manager. Steps move through: `Pending → Assigned → InProgress → Completed | Failed`.
@@ -448,7 +448,7 @@ const myWork = engine.getForAgent('worker-2')
 ## Strategy Interface
 
 ```typescript
-import type { Strategy, MutableAgentState } from '@pay/agent-core-ts'
+import type { Strategy, MutableAgentState } from '@pay/agent-runtime'
 ```
 
 Implement `Strategy` to define custom agent behaviour. The `run` method receives a view of the agent's mutable state and an `AbortSignal`. When the signal fires, the strategy must resolve its `Promise`.
@@ -471,7 +471,7 @@ export interface MutableAgentState {
 ### Helper: `untilAborted(signal)`
 
 ```typescript
-import { untilAborted } from '@pay/agent-core-ts'
+import { untilAborted } from '@pay/agent-runtime'
 ```
 
 Returns a `Promise<void>` that resolves when the abort signal fires. Use this in strategy loops to wait without busy-spinning:
@@ -483,8 +483,8 @@ await untilAborted(signal) // blocks until agent.stop() is called
 ### Implementing a Custom Strategy
 
 ```typescript
-import type { Strategy, MutableAgentState } from '@pay/agent-core-ts'
-import { untilAborted } from '@pay/agent-core-ts'
+import type { Strategy, MutableAgentState } from '@pay/agent-runtime'
+import { untilAborted } from '@pay/agent-runtime'
 
 export class PriceCheckStrategy implements Strategy {
   readonly name = 'price-check'
@@ -520,7 +520,7 @@ export class PriceCheckStrategy implements Strategy {
 ### IdleStrategy
 
 ```typescript
-import { IdleStrategy } from '@pay/agent-core-ts'
+import { IdleStrategy } from '@pay/agent-runtime'
 new IdleStrategy()
 ```
 
@@ -533,7 +533,7 @@ Does nothing useful — records an `idle-tick` action every 60 seconds. Used as 
 ### RpcPollStrategy
 
 ```typescript
-import { RpcPollStrategy } from '@pay/agent-core-ts'
+import { RpcPollStrategy } from '@pay/agent-runtime'
 new RpcPollStrategy(intervalMs?: number)
 ```
 
@@ -557,8 +557,8 @@ await manager.startAgent('slot-watcher')
 ### TransferStrategy
 
 ```typescript
-import { TransferStrategy } from '@pay/agent-core-ts'
-import type { TransferConfig } from '@pay/agent-core-ts'
+import { TransferStrategy } from '@pay/agent-runtime'
+import type { TransferConfig } from '@pay/agent-runtime'
 
 new TransferStrategy(config: TransferConfig)
 ```
@@ -597,8 +597,8 @@ console.log(urlAction?.details) // solana:7xKXtg2...?amount=0.1&label=...
 ### PaymentStrategy
 
 ```typescript
-import { PaymentStrategy } from '@pay/agent-core-ts'
-import type { PaymentConfig } from '@pay/agent-core-ts'
+import { PaymentStrategy } from '@pay/agent-runtime'
+import type { PaymentConfig } from '@pay/agent-runtime'
 
 new PaymentStrategy(config: PaymentConfig)
 ```
@@ -632,8 +632,8 @@ await manager.startAgent('buyer')
 ### HeliusMonitorStrategy
 
 ```typescript
-import { HeliusMonitorStrategy } from '@pay/agent-core-ts'
-import type { HeliusMonitorConfig } from '@pay/agent-core-ts'
+import { HeliusMonitorStrategy } from '@pay/agent-runtime'
+import type { HeliusMonitorConfig } from '@pay/agent-runtime'
 
 new HeliusMonitorStrategy(config: HeliusMonitorConfig)
 ```
@@ -676,8 +676,8 @@ const received = actions.find(a => a.action_type === 'payment-received')
 ## Class: CoralMcpAgent
 
 ```typescript
-import { CoralMcpAgent } from '@pay/agent-core-ts'
-import type { CoralMcpConfig, CoralMention } from '@pay/agent-core-ts'
+import { CoralMcpAgent } from '@pay/agent-runtime'
+import type { CoralMcpConfig, CoralMention } from '@pay/agent-runtime'
 ```
 
 Full MCP participant in CoralOS sessions. Mirrors the Python `coral_agent.py` pattern:  
@@ -766,7 +766,7 @@ Closes the MCP client connection.
 See `examples/coral_mcp_example.ts`:
 
 ```typescript
-import { CoralMcpAgent } from '@pay/agent-core-ts'
+import { CoralMcpAgent } from '@pay/agent-runtime'
 
 const agent = new CoralMcpAgent({
   connectionUrl: process.env.CORAL_CONNECTION_URL!,
@@ -799,7 +799,7 @@ npx ts-node --esm examples/coral_mcp_example.ts
 ## Class: CoralServerSync
 
 ```typescript
-import { CoralServerSync } from '@pay/agent-core-ts'
+import { CoralServerSync } from '@pay/agent-runtime'
 ```
 
 Optional bridge that makes TypeScript agents visible in the coral-server UI and allows them to exchange messages with Rust agents over the HTTP API.
@@ -829,8 +829,8 @@ sync.detach()
 ## Roles and Permissions
 
 ```typescript
-import { AgentRole, getPermissions } from '@pay/agent-core-ts'
-import type { RolePermissions } from '@pay/agent-core-ts'
+import { AgentRole, getPermissions } from '@pay/agent-runtime'
+import type { RolePermissions } from '@pay/agent-runtime'
 ```
 
 ### `AgentRole` enum
@@ -992,7 +992,7 @@ import {
   RpcPollStrategy,
   AgentRole,
   CoralServerSync,
-} from '@pay/agent-core-ts'
+} from '@pay/agent-runtime'
 
 const RECIPIENT = '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgRkr'
 const HELIUS_KEY = process.env.HELIUS_API_KEY ?? ''

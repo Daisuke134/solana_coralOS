@@ -1,7 +1,7 @@
 # coral-agents
 
 Agents launched by CoralOS as Docker containers. They connect to a CoralOS
-session over MCP (via `startCoralAgent` in `sdk/agent-core-ts`) and exchange
+session over MCP (via `startCoralAgent` in `sdk/agent-runtime`) and exchange
 messages in the session thread.
 
 | Agent | Language | Role |
@@ -11,7 +11,7 @@ messages in the session thread.
 | `echo-agent`   | TypeScript | Minimal smoke-test agent — echoes any `@mention`. Proves MCP connectivity. |
 | `user_proxy`   | Python     | Inert puppet. Lets the Puppet API inject test messages into a session. |
 
-The TypeScript agents build on `sdk/agent-core-ts` (the `Strategy` / `AgentManager`
+The TypeScript agents build on `sdk/agent-runtime` (the `Strategy` / `AgentManager`
 runtime). On-chain wallet monitoring lives there too, as `HeliusMonitorStrategy`.
 
 ## Build the images
