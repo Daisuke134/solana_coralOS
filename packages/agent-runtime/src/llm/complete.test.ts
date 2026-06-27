@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { pickProvider, parseJsonReply } from './llm.js'
+import { pickProvider, parseJsonReply } from './complete.js'
 
 const env = { ...process.env }
 afterEach(() => {

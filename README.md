@@ -89,7 +89,7 @@ section.
 
 ### 1. CoralOS — the coordination layer (MCP)
 
-[`coral_mcp.ts`](packages/agent-runtime/src/coral_mcp.ts) speaks the Model Context Protocol over a
+[`coral/mcp.ts`](packages/agent-runtime/src/coral/mcp.ts) speaks the Model Context Protocol over a
 StreamableHTTP transport: it connects to coral-server, discovers its tools, and exposes four primitives:
 
 | Primitive | Does |
@@ -100,13 +100,13 @@ StreamableHTTP transport: it connects to coral-server, discovers its tools, and 
 | `send` / `reply` | post into a thread, optionally @-mentioning agents |
 
 The entire market — `WANT → BID → AWARD → ESCROW_REQUIRED → DEPOSITED → DELIVERED` — is just these
-messages over a shared thread. [`startCoralAgent`](packages/agent-runtime/src/coral_mcp_server.ts) wires
+messages over a shared thread. [`startCoralAgent`](packages/agent-runtime/src/coral/server.ts) wires
 the run loop to an `AbortSignal` for clean SIGINT/SIGTERM shutdown. **coral-server never holds a
 keypair** — it coordinates the deal; it never settles it.
 
 ### 2. Solana Pay — the binding layer
 
-[`solana_pay.ts`](packages/agent-runtime/src/solana_pay.ts) is four functions:
+[`solana/pay.ts`](packages/agent-runtime/src/solana/pay.ts) is four functions:
 
 | Function | Does |
 |----------|------|
@@ -163,10 +163,8 @@ Solana Pay binds it, the escrow settles it — all pointing at the same `referen
 - **A new buyer** — what it wants + how it judges value (the selection prompt).
 - **A new role / mechanism** — a reseller, an escrow **arbiter** agent, open-cry bidding, on-chain reputation.
 
-Deep dives: **[docs/MARKETPLACE.md](docs/MARKETPLACE.md)** (protocol, escrow flow, under-the-hood) ·
-**[docs/APIS.md](docs/APIS.md)** (the goods you can sell) ·
-**[escrow/README.md](examples/agent-economy/escrow/README.md)** (the contract) ·
-**[docs/PRODUCTION_HARDENING.md](docs/PRODUCTION_HARDENING.md)** (past a devnet demo).
+Deep dives: **[docs/DATA_PROVIDERS.md](docs/DATA_PROVIDERS.md)** (the data you can sell + where each key goes) ·
+**[escrow/README.md](examples/agent-economy/escrow/README.md)** (the settlement-spine contract).
 
 ## Optional: Claude Code skills
 

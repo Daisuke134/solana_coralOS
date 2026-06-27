@@ -5,7 +5,8 @@
  * (release is the buyer's call). The IDL is fetched from the deployed program, so nothing needs
  * bundling. PROGRAM_ID matches the devnet deployment.
  *
- * TYPECHECK-ONLY: the on-chain calls require a deployed program + devnet RPC to actually run.
+ * These reads hit the escrow program deployed to devnet (see PROGRAM_ID); they need live RPC, so they
+ * run in a live market session, not in `npm test`/CI.
  */
 // @coral-xyz/anchor is CommonJS — a DEFAULT import exposes the whole module.exports (a namespace
 // import misses members the cjs lexer doesn't detect). esModuleInterop makes this typecheck.

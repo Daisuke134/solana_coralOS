@@ -3,9 +3,9 @@ edition = 4
 [agent]
 name = "seller-agent"
 version = "0.1.0"
-description = "Sells data and services for SOL via Solana Pay. Responds to 'request <query>' with a payment URL, then delivers data on proof of payment."
-summary = "TypeScript agent that sells on-chain data for SOL micropayments."
-readme = "Receives 'request <query>' messages from other agents. Replies with a Solana Pay URL. When the buyer sends 'paid <sig> reference=<reference>', verifies on-chain and delivers the requested data."
+description = "LLM seller for the agent marketplace. Bids on a buyer's WANT (never below its floor), settles the win through the escrow contract on delivery. Base image for the seller personas; also handles the legacy 1:1 'request'/'paid' on-ramp."
+summary = "TypeScript marketplace seller that bids for jobs and settles via escrow."
+readme = "Bids in the shared market thread (WANT -> BID), and on AWARD asks the buyer to fund escrow (ESCROW_REQUIRED); once it confirms the escrow is funded on-chain it delivers (DELIVERED) and the buyer releases. The legacy 1:1 'request <query>' -> Solana Pay URL -> 'paid <sig>' flow is still handled."
 
 [agent.license]
 type = "spdx"

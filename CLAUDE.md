@@ -18,7 +18,7 @@ live market. The headline (and only) example is `examples/marketplace/`.
 | `examples/marketplace/` | **The track.** `start.ts` launches the market session (buyer + 3 LLM seller personas). |
 | `examples/agent-economy/` | `config/coral.toml` (wallet-free MCP config) + `escrow/` (the Anchor escrow contract — the settlement spine). |
 | `coral-agents/` | Agents coral-server launches: `seller-agent` (LLM bidder + `service.ts` fork point), `buyer-agent` (market loop), and the config-only personas `seller-cheap`/`-premium`/`-lazy`. |
-| `packages/agent-runtime/` | The three pillars: CoralOS MCP client (`startCoralAgent`), Solana Pay (`solana_pay.ts` + devnet guard), LLM (`llm.ts` provider shim), and the market protocol (`market.ts`). |
+| `packages/agent-runtime/` | The three pillars, one folder each under `src/`: CoralOS MCP client (`coral/`), Solana Pay + devnet guard (`solana/`), the LLM provider shim (`llm/`), and the market protocol (`market/`). Root `src/index.ts` re-exports all of them. |
 | `scripts/` | `setup.js` (wallet generation), `doctor.js` (health check). |
 | `docs/`, `.claude/` | Design docs — `MARKETPLACE.md`, `APIS.md`, `PRODUCTION_HARDENING.md`, `SECURITY_REVIEW.md`. |
 
@@ -61,13 +61,15 @@ cd examples/marketplace && npm install && npm run typecheck                     
 
 Every agent imports these and writes only behavior:
 
-- **CoralOS** — `coral_mcp.ts` (`CoralMcpAgent`: StreamableHTTP transport, tool discovery,
-  `parseMention`) + `coral_mcp_server.ts` (`startCoralAgent` — joins a session, hands `run` a `ctx`).
-- **Solana** — `solana.ts` (`solanaConnection`/`assertDevnet` guard) + `solana_pay.ts`
+- **CoralOS** (`coral/`) — `mcp.ts` (`CoralMcpAgent`: StreamableHTTP transport, tool discovery,
+  `parseMention`) + `server.ts` (`startCoralAgent` — joins a session, hands `run` a `ctx`).
+- **Solana** (`solana/`) — `connection.ts` (`solanaConnection`/`assertDevnet` guard) + `pay.ts`
   (`generatePaymentUrl`/`verifyPayment`/`signTransfer`/`loadKeypairB58`, reference-bound).
-- **LLM** — `llm.ts` (`complete()` — SDK-free shim; Anthropic default, `LLM_PROVIDER=openai` flips it).
-- **Market protocol** — `market.ts` (pure WANT/BID/AWARD/ESCROW_REQUIRED/DEPOSITED format+parse +
+- **LLM** (`llm/`) — `complete.ts` (`complete()` — SDK-free shim; Anthropic default, `LLM_PROVIDER=openai` flips it).
+- **Market protocol** (`market/`) — `protocol.ts` (pure WANT/BID/AWARD/ESCROW_REQUIRED/DEPOSITED format+parse +
   `selectBids`/`pickCheapest`). Coordination only — settlement is the escrow contract, agent-side.
+
+Each pillar folder has its own `index.ts` barrel; the package root `src/index.ts` re-exports all four.
 
 ### coral-agents (what coral-server launches)
 

@@ -15,7 +15,7 @@ import {
 } from '@solana/web3.js'
 import { encodeURL, validateTransfer } from '@solana/pay'
 import BigNumber from 'bignumber.js'
-import { solanaConnection } from './solana.js'
+import { solanaConnection } from './connection.js'
 
 /** Return from {@link generatePaymentUrl}. */
 export interface PaymentUrl {

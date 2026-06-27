@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { Keypair } from '@solana/web3.js'
 import bs58 from 'bs58'
-import { generatePaymentUrl, loadKeypairB58 } from './solana_pay.js'
+import { generatePaymentUrl, loadKeypairB58 } from './pay.js'
 
 describe('generatePaymentUrl', () => {
   const recipient = Keypair.generate().publicKey.toBase58()

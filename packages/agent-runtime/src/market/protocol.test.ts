@@ -4,7 +4,7 @@ import {
   formatEscrowRequired, parseEscrowRequired, formatDeposited, parseDeposited,
   selectBids, pickCheapest, verb, messageRound,
   type Bid,
-} from './market.js'
+} from './protocol.js'
 
 describe('WANT round-trip', () => {
   it('formats and parses', () => {

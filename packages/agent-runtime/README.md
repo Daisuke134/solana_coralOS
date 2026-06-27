@@ -11,12 +11,14 @@ The `coral-agents/` agents depend on it via a local `file:` link. Build its `dis
 
 ## The pillars
 
+Each pillar is a folder under `src/` with its own barrel; the root `src/index.ts` re-exports them all.
+
 | Pillar | Exports | Module |
 |--------|---------|--------|
-| **CoralOS** | `startCoralAgent(config, run)`, `CoralMcpAgent`, and the `ctx` verbs (`waitForMention`, `waitForMentionInThread`, `waitForAgent`, `reply`, `send`, `createThread`) | `coral_mcp*.ts` |
-| **Solana** | `solanaConnection`/`assertDevnet` (devnet guard), `generatePaymentUrl`/`verifyPayment`/`signTransfer`/`loadKeypairB58` (reference-bound) | `solana.ts`, `solana_pay.ts` |
-| **LLM** | `complete()` — SDK-free provider shim (Anthropic default; `LLM_PROVIDER=openai` flips it) + `parseJsonReply` | `llm.ts` |
-| **Market** | `formatWant`/`parseBid`/`parseAward`/… + `selectBids`/`pickCheapest` — the marketplace wire protocol (pure) | `market.ts` |
+| **CoralOS** | `startCoralAgent(config, run)`, `CoralMcpAgent`, and the `ctx` verbs (`waitForMention`, `waitForMentionInThread`, `waitForAgent`, `reply`, `send`, `createThread`) | `coral/` (`mcp.ts`, `server.ts`) |
+| **Solana** | `solanaConnection`/`assertDevnet` (devnet guard), `generatePaymentUrl`/`verifyPayment`/`signTransfer`/`loadKeypairB58` (reference-bound) | `solana/` (`connection.ts`, `pay.ts`) |
+| **LLM** | `complete()` — SDK-free provider shim (Anthropic default; `LLM_PROVIDER=openai` flips it) + `parseJsonReply` | `llm/` (`complete.ts`) |
+| **Market** | `formatWant`/`parseBid`/`parseAward`/… + `selectBids`/`pickCheapest` — the marketplace wire protocol (pure) | `market/` (`protocol.ts`) |
 
 The runtime is coordination + helpers — it never holds a keypair. Settlement is the escrow contract,
 called agent-side.

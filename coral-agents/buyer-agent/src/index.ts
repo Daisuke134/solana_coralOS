@@ -12,8 +12,8 @@
  *      MARKET_SELLERS (csv of seller names), BID_WINDOW_MS, SOLANA_RPC_URL,
  *      ANTHROPIC_API_KEY|OPENAI_API_KEY (+ LLM_PROVIDER), TRACE=1.
  *
- * TYPECHECK-ONLY: the deposit/release calls require a deployed escrow program + a funded devnet
- * wallet to actually run.
+ * The deposit/release calls settle against the escrow program deployed to devnet; they need a funded
+ * devnet wallet + live RPC, so they run in a live market session rather than in `npm test`/CI.
  */
 import {
   startCoralAgent, complete, parseJsonReply, loadKeypairB58,

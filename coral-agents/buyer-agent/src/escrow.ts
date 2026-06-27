@@ -5,7 +5,8 @@
  * deadline. The `reference` is the same key the seller issues — it seeds the PDA. IDL is fetched
  * from the deployed program.
  *
- * TYPECHECK-ONLY: the on-chain calls require a deployed program + a funded devnet wallet to run.
+ * These calls settle against the escrow program deployed to devnet (see PROGRAM_ID); they need a
+ * funded devnet wallet + live RPC, so they run in a live market session, not in `npm test`/CI.
  */
 // @coral-xyz/anchor is CommonJS. Under Node ESM, a NAMESPACE import (`import * as`) only exposes the
 // names cjs-module-lexer detects (BN is missed → "BN is not a constructor"). A DEFAULT import gives

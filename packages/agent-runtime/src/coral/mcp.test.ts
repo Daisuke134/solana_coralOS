@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseMention } from './coral_mcp.js'
+import { parseMention } from './mcp.js'
 
 describe('parseMention — CoralOS response shapes', () => {
   it('nested messages[] (current CoralOS format)', () => {

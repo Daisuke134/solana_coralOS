@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { assertDevnet } from './solana.js'
+import { assertDevnet } from './connection.js'
 
 const original = process.env.ALLOW_MAINNET
 afterEach(() => {
