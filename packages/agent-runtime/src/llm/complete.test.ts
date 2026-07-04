@@ -38,6 +38,22 @@ describe('pickProvider', () => {
     delete process.env.VENICE_API_KEY
     expect(pickProvider()).toBe('anthropic')
   })
+
+  it('explicit LLM_PROVIDER=clawrouter wins, no key needed (zero-human-key brain)', () => {
+    process.env.LLM_PROVIDER = 'clawrouter'
+    delete process.env.OPENAI_API_KEY
+    delete process.env.VENICE_API_KEY
+    delete process.env.ANTHROPIC_API_KEY
+    expect(pickProvider()).toBe('clawrouter')
+  })
+
+  it('never auto-detects clawrouter (it needs no key, so it must be explicit-only)', () => {
+    delete process.env.LLM_PROVIDER
+    delete process.env.OPENAI_API_KEY
+    delete process.env.VENICE_API_KEY
+    delete process.env.ANTHROPIC_API_KEY
+    expect(pickProvider()).toBe('anthropic') // not 'clawrouter' — absence of all keys must not silently pick it
+  })
 })
 
 describe('parseJsonReply', () => {

@@ -10,12 +10,18 @@
  * to detect it, and dispatch to a `complete*()` in `complete()`. Venice is OpenAI-compatible, so it just
  * reuses `completeOpenAICompatible()` with a different base URL + key.
  */
-export type LlmProvider = 'anthropic' | 'openai' | 'venice'
+export type LlmProvider = 'anthropic' | 'openai' | 'venice' | 'clawrouter'
 
-/** Explicit `LLM_PROVIDER` wins; else auto-detect by which key is present; else Anthropic. */
+/**
+ * Explicit `LLM_PROVIDER` wins; else auto-detect by which key is present; else Anthropic.
+ * `clawrouter` is EXPLICIT-ONLY (never auto-detected): it needs no API key at all (the local
+ * ClawRouter proxy authenticates via wallet signature, not a bearer key), so absence-of-keys must
+ * not silently select it — that would make "no key configured" indistinguishable from "zero-human
+ * brain chosen on purpose".
+ */
 export function pickProvider(): LlmProvider {
   const p = process.env.LLM_PROVIDER?.toLowerCase()
-  if (p === 'openai' || p === 'anthropic' || p === 'venice') return p
+  if (p === 'openai' || p === 'anthropic' || p === 'venice' || p === 'clawrouter') return p
   if (process.env.OPENAI_API_KEY) return 'openai'
   if (process.env.VENICE_API_KEY) return 'venice'
   return 'anthropic'
@@ -25,6 +31,7 @@ const DEFAULT_MODEL: Record<LlmProvider, string> = {
   anthropic: 'claude-haiku-4-5-20251001',
   openai: 'gpt-4o-mini',
   venice: 'llama-3.3-70b',
+  clawrouter: 'auto',
 }
 
 export interface CompleteOpts {
@@ -41,7 +48,10 @@ export interface CompleteOpts {
  */
 export async function complete(opts: CompleteOpts): Promise<string> {
   const provider = pickProvider()
-  const model = opts.model ?? process.env.LLM_MODEL ?? DEFAULT_MODEL[provider]
+  // `??` only falls through on null/undefined, not `''` — an empty LLM_MODEL= line in .env (the
+  // shipped .env.example's own default) would otherwise pass an empty-string model to the
+  // provider instead of DEFAULT_MODEL. Treat '' the same as unset.
+  const model = (opts.model || undefined) ?? (process.env.LLM_MODEL || undefined) ?? DEFAULT_MODEL[provider]
   const maxTokens = opts.maxTokens ?? 512
   const trace = process.env.TRACE === '1'
   if (trace) console.error(`[llm] provider=${provider} model=${model}`)
@@ -50,6 +60,8 @@ export async function complete(opts: CompleteOpts): Promise<string> {
     ? await completeOpenAI(opts, model, maxTokens)
     : provider === 'venice'
     ? await completeVenice(opts, model, maxTokens)
+    : provider === 'clawrouter'
+    ? await completeClawRouter(opts, model, maxTokens)
     : await completeAnthropic(opts, model, maxTokens)
 
   if (trace) console.error(`[llm] ← ${text.slice(0, 300)}`)
@@ -96,6 +108,18 @@ async function completeVenice(opts: CompleteOpts, model: string, maxTokens: numb
     key,
     label: 'Venice',
   })
+}
+
+/**
+ * ClawRouter — the zero-human-key brain (BlockRun). A local proxy (`clawrouter` binary, listens on
+ * `:8402`) authenticates outbound LLM calls via wallet signature instead of an API key, so NO human
+ * ever provisions/holds a key for this path. OpenAI-compatible request shape; `model:'auto'` lets
+ * ClawRouter pick a free-tier model itself. Override the endpoint with `CLAWROUTER_URL` if the local
+ * proxy runs on a non-default port.
+ */
+async function completeClawRouter(opts: CompleteOpts, model: string, maxTokens: number): Promise<string> {
+  const url = process.env.CLAWROUTER_URL ?? 'http://localhost:8402/v1/chat/completions'
+  return completeOpenAICompatible(opts, model, maxTokens, { url, key: '', label: 'ClawRouter' })
 }
 
 /** The OpenAI chat-completions request shape, shared by any OpenAI-compatible provider (OpenAI, Venice). */
