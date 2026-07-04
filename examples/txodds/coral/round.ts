@@ -69,14 +69,22 @@ async function main(): Promise<void> {
   if (env.LLM_PROVIDER) llm.LLM_PROVIDER = str(env.LLM_PROVIDER)
   if (env.LLM_MODEL) llm.LLM_MODEL = str(env.LLM_MODEL)
   if (env.TRACE) llm.TRACE = str(env.TRACE)
+  // ClawRouter (zero-human-key brain) runs on the HOST, not inside the spawned agent containers —
+  // 'localhost' inside a container means the container itself, so default to the Docker host alias.
+  if (env.LLM_PROVIDER === 'clawrouter') {
+    llm.CLAWROUTER_URL = str(env.CLAWROUTER_URL ?? 'http://host.docker.internal:8402/v1/chat/completions')
+  }
 
   const fixtureId = await liveFixtureId()
 
   const sellerOpts = (name: string, floor: string, persona: string) => ({
     SELLER_WALLET: str(wallet), SOLANA_RPC_URL: str(rpc), AGENT_NAME: str(name),
-    SERVICES: str('txline'), FLOOR_SOL: f64(Number(floor)), PERSONA: str(persona),
+    // R5: sellers carry BOTH the kit's own TxLINE demo AND Anicca's real service (its own
+    // verified net worth / earnings) — 'anicca' is what THIS round's buyer actually WANTs.
+    SERVICES: str('anicca,txline'), FLOOR_SOL: f64(Number(floor)), PERSONA: str(persona),
     SETTLEMENT_MODE: str('arbiter'), TXLINE_API_KEY: str(env.TXLINE_API_KEY),
     ...(env.TXLINE_BASE_URL ? { TXLINE_BASE_URL: str(env.TXLINE_BASE_URL) } : {}),
+    ...(env.ANICCA_DASHBOARD_URL ? { ANICCA_DASHBOARD_URL: str(env.ANICCA_DASHBOARD_URL) } : {}),
     ...llm,
   })
   const specialist = agent('seller-worldcup', sellerOpts(
@@ -98,7 +106,11 @@ async function main(): Promise<void> {
     BUYER_KEYPAIR_B58: str(keypair), AGENT_NAME: str('buyer-agent'), SOLANA_RPC_URL: str(rpc),
     ARBITER_KEYPAIR_B58: str(arbiter), SETTLEMENT_MODE: str('arbiter'),
     SELLER_WALLET: str(wallet), BUYER_MAX_SOL: f64(Number(env.BUYER_MAX_SOL ?? '0.001')),
-    BUYER_SERVICE: str('txline'), BUYER_ARG: str(`edge ${fixtureId}`),
+    // R5: the buyer WANTs Anicca's own service (its real verified net worth / earnings), not
+    // the kit's stock TxLINE odds. agentId = Anicca's canonical founder wallet (the real identity
+    // this data is about); falls back gracefully (documented, never-crash) if that row isn't yet
+    // synced to the live leaderboard (tracked separately, task #18).
+    BUYER_SERVICE: str('anicca'), BUYER_ARG: str(env.ANICCA_AGENT_ID ?? '0x810f6d61f7606deee2657d3083e150a222bc29c5'),
     MARKET_SELLERS: str('seller-worldcup,seller-fast,seller-premium'), ...llm,
   })
 

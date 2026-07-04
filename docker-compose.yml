@@ -35,6 +35,9 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - LLM_PROVIDER=${LLM_PROVIDER:-}
       - LLM_MODEL=${LLM_MODEL:-}
+      # ClawRouter (zero-human-key brain) runs on the HOST at :8402 — containers must reach it via
+      # host.docker.internal, not localhost (which inside the container means the container itself).
+      - CLAWROUTER_URL=http://host.docker.internal:8402/v1/chat/completions
       # The TxLINE token the seller uses to fetch verified World Cup odds (mint with `npm run mint`).
       - TXLINE_API_KEY=${TXLINE_API_KEY}
       - TXLINE_BASE_URL=${TXLINE_BASE_URL:-}
