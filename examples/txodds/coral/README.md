@@ -43,6 +43,17 @@ Needs Docker for `coral-server` and the repo `.env` with:
   works: `ANTHROPIC_API_KEY`, or `LLM_PROVIDER=openai` + `OPENAI_API_KEY`. See [../../../LLM.md](../../../LLM.md).
   `round.ts` forwards whichever of these is set to the agents in the session request.
 
+**Build the agent images FIRST** (from the repo root) — `coral-server` does NOT build them itself;
+without this it tries to `docker pull buyer-agent:0.1.0` from a registry and fails with a 404
+(`pull access denied ... repository does not exist`, verified live):
+
+```sh
+docker build -f coral-agents/buyer-agent/Dockerfile  -t buyer-agent:0.1.0  .
+docker build -f coral-agents/seller-agent/Dockerfile -t seller-agent:0.1.0 .
+```
+
+Then:
+
 ```sh
 docker compose up -d coral
 cd examples/txodds
@@ -50,7 +61,11 @@ npm run coral
 ```
 
 `round.ts` asks the running proxy for a live fixture id from `/api/board`, starts the buyer plus three
-seller personas, and injects `SETTLEMENT_MODE=arbiter` into the agents.
+seller personas, and injects `SETTLEMENT_MODE` into the agents (this fork's `.env` defaults to
+`SETTLEMENT_MODE=direct` — a real 2-party buyer-released escrow — because a freshly `setup.js`-generated
+`ARBITER_KEYPAIR_B58` is NOT the on-chain admin arbiter the deployed arbiter program's config PDA was
+initialized with; `arbiter` mode throws `NotArbiter` on release unless you're using the original
+kit author's arbiter key).
 
 ## Watch It
 
