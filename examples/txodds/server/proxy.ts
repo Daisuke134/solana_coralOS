@@ -173,24 +173,58 @@ function favouriteOf(fx: any): { label: string; pct: number; fairOdds: number } 
   return favourite ? { label: favourite.label, pct: favourite.pct, fairOdds: favourite.fairOdds } : undefined
 }
 
-/**
- * The escrow `reference` BOUND to the order: `sha256("txodds:<fixtureId>:<favourite>@<fairOdds>:<nonce>")`.
- * A reference is just a 32-byte PDA seed (need not be on-curve), so the digest is the PublicKey directly.
- * The on-chain PDA then provably corresponds to exactly the read bought - anyone with `order.preimage`
- * can recompute it. The nonce keeps each settle's PDA unique. Shared by the direct + arbiter flows.
- */
-async function boundReference(fixtureId: string): Promise<{ reference: PublicKey; order: any }> {
-  const fx = (await board()).find((f) => String(f.FixtureId) === fixtureId)
-  const fav = fx ? favouriteOf(fx) : undefined
-  const nonce = Date.now()
-  const preimage = fav
-    ? `txodds:${fixtureId}:${fav.label}@${fav.fairOdds}:${nonce}`
-    : `txodds:${fixtureId || 'unknown'}:${nonce}`
-  const reference = new PublicKey(createHash('sha256').update(preimage).digest())
-  return {
-    reference,
-    order: { fixtureId, matchup: fx ? `${fx.Participant1} v ${fx.Participant2}` : undefined, favourite: fav?.label, fairOdds: fav?.fairOdds, nonce, preimage },
+// ── FORK POINT (coralos-anicca-seller REQ-1/REQ-2) ──────────────────────────────────────────────
+// Anicca sells its own REAL, on-chain-verified economic state — the same leaderboard entry that
+// renders on aniccaai.com/dashboard (sprint-1/2/3 no-fake engine: net_worth/revenue come from
+// enrichOnChain, never self-reported). `__aniccaFetch` is swappable ONLY for unit tests
+// (REQ-1/REQ-2); the E2E run always uses the real global fetch.
+let __aniccaFetch: typeof fetch = fetch
+export function __setAniccaFetchForTest(f: typeof fetch): void { __aniccaFetch = f }
+
+const ANICCA_DASHBOARD_URL = process.env.ANICCA_DASHBOARD_URL ?? 'https://aniccaai.com/dashboard.json'
+
+interface AniccaPayload {
+  source: 'anicca'
+  agentId: string
+  net_worth_usd?: number
+  net_worth_src?: string
+  revenue_mo_usd?: number
+  earn_src?: string
+  fallback?: true
+  error?: string
+}
+
+async function fetchAniccaEntry(agentId: string): Promise<AniccaPayload> {
+  try {
+    const r = await __aniccaFetch(ANICCA_DASHBOARD_URL)
+    if (!r.ok) return { source: 'anicca', agentId, fallback: true, error: `upstream ${r.status}` }
+    const body: any = await r.json()
+    const entry = (body?.leaderboard ?? []).find((e: any) => e?.id === agentId) ?? body?.leaderboard?.[0]
+    if (!entry) return { source: 'anicca', agentId, fallback: true, error: 'no leaderboard entry' }
+    return {
+      source: 'anicca', agentId,
+      net_worth_usd: entry.net_worth_usd, net_worth_src: entry.net_worth_src,
+      revenue_mo_usd: entry.revenue_mo_usd, earn_src: entry.earn_src,
+    }
+  } catch (e) {
+    // Never crash the settle path on a data-source failure — deterministic fallback, always resolves.
+    return { source: 'anicca', agentId, fallback: true, error: String((e as Error)?.message ?? e) }
   }
+}
+
+/**
+ * The escrow `reference` BOUND to the order: `sha256("anicca:<agentId>:<net_worth>:<nonce>")`.
+ * A reference is just a 32-byte PDA seed (need not be on-curve), so the digest is the PublicKey
+ * directly. The on-chain PDA then provably corresponds to exactly the read bought — anyone with
+ * `order.preimage` can recompute it. The nonce keeps each settle's PDA unique. Shared by the
+ * direct + arbiter + pay-intent flows (all 3 call sites unchanged, per proxy.ts:213,266,334).
+ */
+export async function boundReference(agentId: string): Promise<{ reference: PublicKey; order: any }> {
+  const payload = await fetchAniccaEntry(agentId || 'unknown')
+  const nonce = Date.now()
+  const preimage = `anicca:${payload.agentId}:${payload.net_worth_usd ?? 'na'}:${nonce}`
+  const reference = new PublicKey(createHash('sha256').update(preimage).digest())
+  return { reference, order: { ...payload, nonce, preimage } }
 }
 
 /**
