@@ -82,7 +82,11 @@ async function main(): Promise<void> {
     // R5: sellers carry BOTH the kit's own TxLINE demo AND Anicca's real service (its own
     // verified net worth / earnings) — 'anicca' is what THIS round's buyer actually WANTs.
     SERVICES: str('anicca,txline'), FLOOR_SOL: f64(Number(floor)), PERSONA: str(persona),
-    SETTLEMENT_MODE: str('arbiter'), TXLINE_API_KEY: str(env.TXLINE_API_KEY),
+    // 'direct' — our generated ARBITER_KEYPAIR_B58 isn't the on-chain admin arbiter the deployed
+    // arbiter program's config PDA was initialized with (that's the ORIGINAL kit author's key), so
+    // arbiter-mode release throws NotArbiter (verified live). 'direct' is the buyer-released
+    // escrow — still a REAL on-chain 2-party settlement, just without the 3rd-party arbiter wrapper.
+    SETTLEMENT_MODE: str('direct'), TXLINE_API_KEY: str(env.TXLINE_API_KEY),
     ...(env.TXLINE_BASE_URL ? { TXLINE_BASE_URL: str(env.TXLINE_BASE_URL) } : {}),
     ...(env.ANICCA_DASHBOARD_URL ? { ANICCA_DASHBOARD_URL: str(env.ANICCA_DASHBOARD_URL) } : {}),
     ...llm,
@@ -104,7 +108,7 @@ async function main(): Promise<void> {
   ), 'seller-worldcup')
   const buyer = agent('buyer-agent', {
     BUYER_KEYPAIR_B58: str(keypair), AGENT_NAME: str('buyer-agent'), SOLANA_RPC_URL: str(rpc),
-    ARBITER_KEYPAIR_B58: str(arbiter), SETTLEMENT_MODE: str('arbiter'),
+    ARBITER_KEYPAIR_B58: str(arbiter), SETTLEMENT_MODE: str('direct'),
     SELLER_WALLET: str(wallet), BUYER_MAX_SOL: f64(Number(env.BUYER_MAX_SOL ?? '0.001')),
     // R5: the buyer WANTs Anicca's own service (its real verified net worth / earnings), not
     // the kit's stock TxLINE odds. agentId = Anicca's canonical founder wallet (the real identity
