@@ -187,3 +187,79 @@ Transaction executed in slot 473966331:
 
 Finalized
 
+=== 4J2RTuTVe68zcG59UXypHnRxMS64FS1yEEC7ewyaAQxqNvYUydWSHXnBsWBsdio8SYsLjUDtS4HAWhsJL1kjNX7n (deposit, TRACE multi-agent round) ===
+RPC URL: https://api.devnet.solana.com
+Default Signer Path: /Users/anicca/.config/solana/id.json
+Commitment: confirmed
+
+Transaction executed in slot 474000008:
+  Block Time: 2026-07-05T05:57:32+09:00
+  Version: legacy
+  Recent Blockhash: AdEbGyJss2bAyEB7u7nraHwqkDmBt659BnN5scgPqkcR
+  Signature 0: 4J2RTuTVe68zcG59UXypHnRxMS64FS1yEEC7ewyaAQxqNvYUydWSHXnBsWBsdio8SYsLjUDtS4HAWhsJL1kjNX7n
+  Account 0: srw- AJ99EemzNHpkdjpMJ9aXfLthvfQYkjSXUjYrQr3853MN (fee payer)
+  Account 1: -rw- FtcxwhytLc5jCCEJrqw7J4fkAZZxyrMrqPP3VAEkMSnY
+  Account 2: -r-- 11111111111111111111111111111111
+  Account 3: -r-- 2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27
+  Account 4: -r-x R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet
+  Instruction 0
+    Program:   R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet (4)
+    Account 0: AJ99EemzNHpkdjpMJ9aXfLthvfQYkjSXUjYrQr3853MN (0)
+    Account 1: 2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27 (3)
+    Account 2: FtcxwhytLc5jCCEJrqw7J4fkAZZxyrMrqPP3VAEkMSnY (1)
+    Account 3: 11111111111111111111111111111111 (2)
+    Data: [175, 175, 109, 31, 13, 152, 155, 237, 64, 66, 15, 0, 0, 0, 0, 0, 78, 39, 34, 138, 122, 26, 167, 137, 90, 121, 128, 62, 126, 81, 200, 71, 175, 54, 114, 223, 68, 216, 145, 145, 14, 90, 229, 72, 218, 123, 16, 0, 20, 118, 73, 106, 0, 0, 0, 0]
+  Status: Ok
+    Fee: ◎0.000005
+    Account 0 balance: ◎4.96289876 -> ◎4.96016072
+    Account 1 balance: ◎0 -> ◎0.00273304
+    Account 2 balance: ◎0.000000001
+    Account 3 balance: ◎0.004
+    Account 4 balance: ◎0.00114144
+  Compute Units Consumed: 12897
+  Log Messages:
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet invoke [1]
+    Program log: Instruction: Initialize
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet consumed 12897 of 200000 compute units
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet success
+
+Finalized
+
+=== 3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX (release, TRACE multi-agent round) ===
+RPC URL: https://api.devnet.solana.com
+Default Signer Path: /Users/anicca/.config/solana/id.json
+Commitment: confirmed
+
+Transaction executed in slot 474000013:
+  Block Time: 2026-07-05T05:57:34+09:00
+  Version: legacy
+  Recent Blockhash: A7qZbwFdVeoskX42p9om5cH8PrCgTLKxBdjcVtGRQQVW
+  Signature 0: 3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX
+  Account 0: srw- AJ99EemzNHpkdjpMJ9aXfLthvfQYkjSXUjYrQr3853MN (fee payer)
+  Account 1: -rw- 2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27
+  Account 2: -rw- FtcxwhytLc5jCCEJrqw7J4fkAZZxyrMrqPP3VAEkMSnY
+  Account 3: -r-x R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet
+  Instruction 0
+    Program:   R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet (3)
+    Account 0: AJ99EemzNHpkdjpMJ9aXfLthvfQYkjSXUjYrQr3853MN (0)
+    Account 1: 2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27 (1)
+    Account 2: FtcxwhytLc5jCCEJrqw7J4fkAZZxyrMrqPP3VAEkMSnY (2)
+    Data: [253, 249, 15, 206, 28, 127, 193, 241]
+  Status: Ok
+    Fee: ◎0.000005
+    Account 0 balance: ◎4.96016072 -> ◎4.96188876
+    Account 1 balance: ◎0.004 -> ◎0.005
+    Account 2 balance: ◎0.00273304 -> ◎0
+    Account 3 balance: ◎0.00114144
+  Compute Units Consumed: 4713
+  Log Messages:
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet invoke [1]
+    Program log: Instruction: Release
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet consumed 4713 of 200000 compute units
+    Program R5NWNg9eRLWWQU81Xbzz5Du1k7jTDeeT92Ty6qCeXet success
+
+Finalized

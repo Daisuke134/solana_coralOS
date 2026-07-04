@@ -88,9 +88,13 @@ engine at aniccaai.com.
   actual public dashboard; when no matching row exists yet it fails open with an honest
   `fallback:true` marker (never a silently-invented number) — same discipline applied everywhere
   else in this fork (devnet SOL is never reported as real money in the self-report either).
-- **Adversarial self-review**: this submission went through a fresh-context adversary pass that
-  found real issues (a stale sub-manifest, an imprecise code comment, an empty-string URL bug in
-  the self-report path) — all fixed and re-verified, logged honestly rather than hidden.
+- **Adversarial self-review**: this submission went through two fresh-context adversary passes
+  that found real issues (a stale sub-manifest, an imprecise code comment, an empty-string URL bug
+  in the self-report path, a contradictory top-level README) — all fixed and code-level verified;
+  one item (the self-report URL fix specifically) is fixed and unit-tested but NOT yet
+  re-confirmed in a THIRD live Docker round (disk constraints on the dev machine cut that
+  verification short) — disclosed honestly here rather than glossed over, tracked as an open
+  follow-up alongside the parent spec's task #21.
 
 ---
 

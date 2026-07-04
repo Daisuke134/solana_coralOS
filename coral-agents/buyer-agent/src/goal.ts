@@ -1,5 +1,14 @@
 // <- FORK HERE - what does your buyer agent want to buy?
 //
+// UPSTREAM TEMPLATE FILE, NOT USED BY THE SUBMITTED ROUND: this is the original kit's
+// fork-it-yourself placeholder (Jupiter DEX swap quotes) for a generic buyer/broker demo.
+// The actual buyer-agent/src/index.ts (the WANT->BID->AWARD->DEPOSITED->DELIVERED->RELEASED
+// loop this repo submits) reads BUYER_SERVICE/BUYER_ARG/BUYER_MAX_SOL directly from env
+// (set by examples/txodds/coral/round.ts to 'anicca'/the founder wallet id), not from the
+// constants below. Left in place as an unmodified reference for anyone forking this repo
+// again for a different service, per the upstream kit's own convention — not dead code by
+// accident, but genuinely inert for THIS submission.
+//
 // BUYER_GOAL is the system prompt for the Claude LLM that drives the buyer.
 // Change this to describe your agent's purpose and what it should request.
 //
