@@ -35,8 +35,14 @@ ship this week.
 
 ### Slide 2 — What it sells
 
-`deliverService('anicca <agentId>')` returns Anicca's **own real, verified net worth and monthly
-earnings** — not a canned demo string, not the kit's stock sports-odds oracle. One line: *"buy a
+`deliverService('anicca <agentId>')` reads Anicca's **own live public leaderboard**
+(aniccaai.com/dashboard.json) for the requested agent's net worth and monthly earnings — not a
+canned demo string, not the kit's stock sports-odds oracle. **Honest caveat**: the public
+leaderboard's row-sync is mid-rollout as of this submission, so most real runs currently return the
+function's own documented, non-crashing fallback (`fallback:true`) rather than a populated number —
+the code path and the on-chain settlement around it are real either way (verified live, both
+branches unit-tested), but we are not claiming every demo run pulls a live non-zero figure yet. One
+line: *"buy a
 read of what Anicca has actually earned, signed and traceable back to its own dashboard."* (The
 kit's original TxLine odds service still exists in the same fork — `service=txline` — as the
 baseline scaffold; `anicca` is what THIS submission actually sells.)
@@ -67,14 +73,24 @@ engine at aniccaai.com.
 
 ### Slide 5 — Proof (this slide wins)
 
-- **DEPOSITED → DELIVERED → RELEASED**, real devnet transaction, Explorer-verified, `Finalized`:
-  https://explorer.solana.com/tx/4p79RhXcw3iHdD2hbWZzasDPNuk9NbBvGnSLEqtCeG4mxTJ5wTLDAuiPuJgUcTfbXUQvzWzzFUt1qiY5NsbGczZU?cluster=devnet
+- **DEPOSITED → DELIVERED → RELEASED, TWO independent real rounds**, Explorer-verified, both
+  `Finalized` (raw `solana confirm -v` output persisted at `evidence/tx-confirmations.txt` +
+  `evidence/trace-clawrouter-multiagent-round.txt`):
+  - https://explorer.solana.com/tx/4p79RhXcw3iHdD2hbWZzasDPNuk9NbBvGnSLEqtCeG4mxTJ5wTLDAuiPuJgUcTfbXUQvzWzzFUt1qiY5NsbGczZU?cluster=devnet
+  - https://explorer.solana.com/tx/3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX?cluster=devnet
 - **Zero human LLM key** at settlement time — verified live with all three provider keys empty in
-  `.env`, `LLM_PROVIDER=clawrouter`, a real (non-fallback) parsed LLM completion returned.
+  `.env`, `LLM_PROVIDER=clawrouter`, and (TRACE=1, persisted) a real, non-fallback parsed LLM
+  completion on BOTH the buyer's best-value pick and a seller's bid decision in the SAME
+  multi-agent round: `[llm] provider=clawrouter model=eco` followed by real model reasoning text
+  (not the deterministic fallback string), e.g. `"Deep-dive analysis offers the highest value for
+  contract data."`
 - **The data delivered is real**, not fabricated — `deliverService('anicca ...')` reads Anicca's
   actual public dashboard; when no matching row exists yet it fails open with an honest
   `fallback:true` marker (never a silently-invented number) — same discipline applied everywhere
   else in this fork (devnet SOL is never reported as real money in the self-report either).
+- **Adversarial self-review**: this submission went through a fresh-context adversary pass that
+  found real issues (a stale sub-manifest, an imprecise code comment, an empty-string URL bug in
+  the self-report path) — all fixed and re-verified, logged honestly rather than hidden.
 
 ---
 
