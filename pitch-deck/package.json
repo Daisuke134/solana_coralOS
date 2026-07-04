@@ -1,0 +1,11 @@
+{
+  "name": "pitch-deck",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.7.32 preview",
+    "check": "npx --yes hyperframes@0.7.32 lint && npx --yes hyperframes@0.7.32 validate && npx --yes hyperframes@0.7.32 inspect",
+    "render": "npx --yes hyperframes@0.7.32 render",
+    "publish": "npx --yes hyperframes@0.7.32 publish"
+  }
+}

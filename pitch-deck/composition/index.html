@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>Anicca × CoralOS — Hackathon Pitch Deck</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core@0.7.32/dist/hyperframe.runtime.iife.js" integrity="sha384-6eT7p1vECaYpg6vD80rrmmgrli/XErDW+2EH0WiDDToaf1OaQeDtXXWbD+eHeleS" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #0a0a0a;
+        --fg: #f4f1ea;
+        --fg-dim: rgba(244, 241, 234, 0.78);
+        --fg-dimmer: rgba(244, 241, 234, 0.5);
+        --accent: #c8302e;
+        --border: rgba(244, 241, 234, 0.16);
+        --sans: "IBM Plex Sans", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+      }
+
+      .slide-root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .slide-root::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(1100px 620px at 88% -8%, rgba(200, 48, 46, 0.14), transparent 60%),
+          radial-gradient(900px 500px at -6% 108%, rgba(200, 48, 46, 0.08), transparent 55%);
+        pointer-events: none;
+      }
+
+      .frame {
+        position: absolute;
+        inset: 0;
+        padding: 64px 104px 56px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+      }
+      .kicker {
+        font-family: var(--mono);
+        font-size: 40px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .slidenum {
+        font-family: var(--mono);
+        font-size: 40px;
+        color: var(--fg-dimmer);
+        letter-spacing: 2px;
+      }
+
+      .headline {
+        font-family: var(--sans);
+        font-weight: 800;
+        font-size: 80px;
+        line-height: 1.14;
+        color: var(--fg);
+        max-width: 1650px;
+        letter-spacing: -1.5px;
+        margin-bottom: 26px;
+      }
+      .headline.small {
+        font-size: 72px;
+      }
+      .headline .accent {
+        color: var(--accent);
+      }
+      .headline .mono-inline {
+        font-family: var(--mono);
+        font-weight: 600;
+        font-size: 0.6em;
+        color: var(--accent);
+        background: rgba(200, 48, 46, 0.12);
+        padding: 4px 14px;
+        border-radius: 8px;
+        display: inline-block;
+      }
+
+      .body-copy {
+        font-size: 44px;
+        line-height: 1.38;
+        color: var(--fg-dim);
+        max-width: 1600px;
+        font-weight: 400;
+      }
+      .body-copy + .body-copy {
+        margin-top: 18px;
+      }
+      .body-copy strong,
+      .body-copy b {
+        color: var(--fg);
+        font-weight: 600;
+      }
+      .body-copy .mono {
+        font-family: var(--mono);
+        color: var(--fg);
+        font-size: 0.94em;
+      }
+
+      .mono {
+        font-family: var(--mono);
+      }
+      .accent {
+        color: var(--accent);
+      }
+
+      .callout {
+        border: 2px solid var(--accent);
+        border-radius: 18px;
+        background: rgba(200, 48, 46, 0.09);
+        padding: 30px 38px;
+      }
+      .callout-label {
+        font-family: var(--mono);
+        font-size: 36px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .callout-text {
+        font-size: 40px;
+        line-height: 1.38;
+        color: var(--fg);
+        font-weight: 400;
+      }
+      .callout-text .mono {
+        font-family: var(--mono);
+        background: rgba(244, 241, 234, 0.08);
+        padding: 2px 10px;
+        border-radius: 6px;
+        font-size: 0.9em;
+      }
+
+      /* --- Slide 4: economy flow --- */
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+        margin-bottom: 26px;
+      }
+      .flow-step {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 24px;
+        background: rgba(244, 241, 234, 0.03);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 170px;
+      }
+      .flow-step .num {
+        font-family: var(--mono);
+        color: var(--accent);
+        font-size: 40px;
+        font-weight: 700;
+      }
+      .flow-step .title {
+        font-size: 42px;
+        font-weight: 700;
+        line-height: 1.18;
+        color: var(--fg);
+      }
+      .flow-step .detail {
+        font-size: 40px;
+        line-height: 1.26;
+        color: var(--fg-dim);
+      }
+
+      .disclosure {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .disclosure-row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .disclosure-row .mark {
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      .disclosure-row .txt {
+        font-size: 40px;
+        line-height: 1.3;
+        color: var(--fg-dim);
+        max-width: 1600px;
+      }
+      .disclosure-row .txt strong {
+        color: var(--fg);
+        font-weight: 600;
+      }
+
+      /* --- Slide 5: proof --- */
+      .txgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+      .txcard {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 26px;
+        background: rgba(244, 241, 234, 0.03);
+      }
+      .txcard .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        padding: 5px 14px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+      .txcard .txlabel {
+        font-family: var(--mono);
+        font-size: 30px;
+        color: var(--fg-dimmer);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .txcard a.txhash {
+        display: block;
+        font-family: var(--mono);
+        font-size: 30px;
+        line-height: 1.3;
+        color: var(--fg);
+        word-break: break-all;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(244, 241, 234, 0.25);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .txcard a.explorer-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 28px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .evidence-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+      .evidence-item {
+        border-left: 3px solid var(--accent);
+        padding-left: 18px;
+      }
+      .evidence-item .tag {
+        font-family: var(--mono);
+        font-size: 24px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--fg-dimmer);
+        margin-bottom: 6px;
+        display: block;
+      }
+      .evidence-item .txt {
+        font-size: 28px;
+        line-height: 1.28;
+        color: var(--fg-dim);
+      }
+      .evidence-item .txt .mono {
+        font-family: var(--mono);
+        color: var(--fg);
+        font-size: 0.92em;
+      }
+      .evidence-item .quote {
+        font-size: 28px;
+        line-height: 1.28;
+        color: var(--fg);
+        font-style: italic;
+        margin-bottom: 6px;
+      }
+
+      .proof-link {
+        margin-top: 18px;
+        font-size: 30px;
+        line-height: 1.3;
+        color: var(--fg-dim);
+      }
+      .proof-link a {
+        color: var(--accent);
+        font-family: var(--mono);
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="application/hyperframes-slideshow+json">
+      {
+        "slides": [
+          { "sceneId": "slide-1-customer", "notes": "Open cold: no human pays this agent's compute bill. That's the whole pitch in one line." },
+          { "sceneId": "slide-2-product", "notes": "Read the caveat out loud, don't rush past it. It's the credibility flex, not a confession." },
+          { "sceneId": "slide-3-why-they-pay", "notes": "Emphasize: wallet signature, not API key. Nobody hand-provisioned this agent's brain." },
+          { "sceneId": "slide-4-economy", "notes": "Walk the flow left to right: want -> bids -> pick -> escrow -> self-report." },
+          { "sceneId": "slide-5-proof", "notes": "Click through both Explorer links live if asked, and the live earnings link. Close on the adversarial-review line." }
+        ],
+        "slideSequences": []
+      }
+    </script>
+
+    <!-- ============ SLIDE 1 — THE CUSTOMER ============ -->
+    <div data-hf-id="hf-yots" class="slide-root" data-composition-id="slide-1-customer" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-auh6" id="frame-customer" class="clip frame" data-start="0" data-duration="8" data-track-index="1">
+        <div data-hf-id="hf-mndw" class="topbar">
+          <span data-hf-id="hf-fcse" id="c-kicker" class="kicker">The Customer</span>
+          <span data-hf-id="hf-y2gq" class="slidenum mono">01 / 05</span>
+        </div>
+
+        <h1 data-hf-id="hf-aecc" id="c-headline" class="headline">
+          Every competing agent has a human quietly paying its API bill —
+          <span data-hf-id="hf-uieg" class="accent">ours doesn't.</span>
+        </h1>
+
+        <p data-hf-id="hf-rv4e" id="c-body" class="body-copy">
+          <strong data-hf-id="hf-lgzl">Anicca</strong> is an autonomous agent built by Daisuke Narita, proving an AI can
+          sustain itself: think, earn, and pay its own compute — with zero human in the loop.
+        </p>
+
+        <div data-hf-id="hf-ytoz" style="flex: 1"></div>
+
+        <div data-hf-id="hf-np3m" id="c-callout" class="callout">
+          <div data-hf-id="hf-27p5" class="callout-label">
+            <span data-hf-id="hf-09a4" class="mark">→</span><span data-hf-id="hf-pvl5">Why now</span>
+          </div>
+          <p data-hf-id="hf-s31r" class="callout-text">
+            ClawRouter's wallet-authenticated free LLM tier made
+            <strong data-hf-id="hf-dtvi">"the agent pays for its own brain"</strong> real and shippable
+            <strong data-hf-id="hf-whea">this week</strong> — not a research curiosity.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ SLIDE 2 — WHAT IT SELLS ============ -->
+    <div data-hf-id="hf-kpjv" class="slide-root" data-composition-id="slide-2-product" data-start="8" data-duration="12" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-beam" id="frame-product" class="clip frame" data-start="8" data-duration="12" data-track-index="1">
+        <div data-hf-id="hf-qwf0" class="topbar">
+          <span data-hf-id="hf-5hi8" id="p-kicker" class="kicker">What It Sells</span>
+          <span data-hf-id="hf-ymld" class="slidenum mono">02 / 05</span>
+        </div>
+
+        <h1 data-hf-id="hf-xty3" id="p-headline" class="headline small">
+          <span data-hf-id="hf-tw6y" class="mono-inline">deliverService('anicca &lt;agentId&gt;')</span>
+          sells Anicca's own real, on-chain-verified net worth and earnings — not a canned
+          sports-odds demo.
+        </h1>
+
+        <p data-hf-id="hf-s49w" id="p-body" class="body-copy">
+          It reads a live public leaderboard at
+          <span data-hf-id="hf-6uh7" class="mono">aniccaai.com/dashboard.json</span>.
+        </p>
+
+        <div data-hf-id="hf-gkz7" style="flex: 1"></div>
+
+        <div data-hf-id="hf-hh4h" id="p-callout" class="callout">
+          <div data-hf-id="hf-qafh" class="callout-label">
+            <span data-hf-id="hf-jl4l" class="mark">⚑</span><span data-hf-id="hf-opit">Honest caveat — this is a credibility feature</span>
+          </div>
+          <p data-hf-id="hf-kqy5" class="callout-text">
+            The leaderboard sync is mid-rollout — most real runs today return the code's own
+            documented <span data-hf-id="hf-rmkk" class="mono">fallback:true</span> marker rather than a populated
+            number. The code path and on-chain settlement are real either way; both branches are
+            unit-tested.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ SLIDE 3 — WHY THEY PAY ============ -->
+    <div data-hf-id="hf-2ad6" class="slide-root" data-composition-id="slide-3-why-they-pay" data-start="20" data-duration="11" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-1uga" id="frame-why-they-pay" class="clip frame" data-start="20" data-duration="11" data-track-index="1">
+        <div data-hf-id="hf-pphx" class="topbar">
+          <span data-hf-id="hf-y5k9" id="w-kicker" class="kicker">Why They Pay</span>
+          <span data-hf-id="hf-ckoc" class="slidenum mono">03 / 05</span>
+        </div>
+
+        <h1 data-hf-id="hf-okpf" id="w-headline" class="headline small">
+          No human pays for the thinking — only the buyer pays for the
+          <span data-hf-id="hf-qoqq" class="accent">answer, on delivery.</span>
+        </h1>
+
+        <p data-hf-id="hf-myhb" id="w-body1" class="body-copy">
+          Value = a verified, non-fabricated read of an autonomous agent's real financial state.
+          Price = a <strong data-hf-id="hf-tr2m">seller-set floor (0.00045–0.00085 SOL)</strong> across three seller
+          personas — specialist, generalist, premium — negotiated live via LLM best-value bid
+          selection.
+        </p>
+        <p data-hf-id="hf-1vxd" id="w-body2" class="body-copy">
+          The brain is <strong data-hf-id="hf-t8zk">ClawRouter</strong> — a local proxy authenticated by
+          <strong data-hf-id="hf-u775">wallet signature</strong>, not a human-provisioned API key.
+        </p>
+
+        <div data-hf-id="hf-g6o6" style="flex: 1"></div>
+
+        <div data-hf-id="hf-41q6" id="w-callout" class="callout">
+          <div data-hf-id="hf-rhck" class="callout-label">
+            <span data-hf-id="hf-1gjz" class="mark">✓</span><span data-hf-id="hf-rk1y">Verified at settlement time</span>
+          </div>
+          <p data-hf-id="hf-7ve0" class="callout-text">
+            All three provider keys (<span data-hf-id="hf-801i" class="mono">OpenAI</span> /
+            <span data-hf-id="hf-e6jo" class="mono">Anthropic</span> / <span data-hf-id="hf-qcvg" class="mono">Venice</span>) were empty in
+            <span data-hf-id="hf-sn6l" class="mono">.env</span>. <span data-hf-id="hf-yxy2" class="mono">LLM_PROVIDER=clawrouter</span>. A
+            <strong data-hf-id="hf-avvh">REAL (non-fallback)</strong> parsed LLM completion was still returned.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ SLIDE 4 — THE ECONOMY ============ -->
+    <div data-hf-id="hf-izyn" class="slide-root" data-composition-id="slide-4-economy" data-start="31" data-duration="11" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-l4bc" id="frame-economy" class="clip frame" data-start="31" data-duration="11" data-track-index="1">
+        <div data-hf-id="hf-q3sy" class="topbar">
+          <span data-hf-id="hf-9u38" id="e-kicker" class="kicker">The Economy</span>
+          <span data-hf-id="hf-kus3" class="slidenum mono">04 / 05</span>
+        </div>
+
+        <h1 data-hf-id="hf-5m7i" id="e-headline" class="headline small">
+          Not one seller — a market: three personas compete, an escrow settles, the winner
+          <span data-hf-id="hf-flrp" class="accent">reports itself.</span>
+        </h1>
+
+        <div data-hf-id="hf-mq6g" id="e-flow" class="flow">
+          <div data-hf-id="hf-a43z" class="flow-step">
+            <span data-hf-id="hf-cshg" class="num">01</span>
+            <span data-hf-id="hf-dikg" class="title">Buyer broadcasts</span>
+            <span data-hf-id="hf-novh" class="detail">A WANT for verified data.</span>
+          </div>
+          <div data-hf-id="hf-llyn" class="flow-step">
+            <span data-hf-id="hf-blkd" class="num">02</span>
+            <span data-hf-id="hf-dil8" class="title">Three sellers bid</span>
+            <span data-hf-id="hf-pm4x" class="detail">Specialist, generalist, premium personas compete.</span>
+          </div>
+          <div data-hf-id="hf-l7nm" class="flow-step">
+            <span data-hf-id="hf-bzve" class="num">03</span>
+            <span data-hf-id="hf-sftt" class="title">Best value wins</span>
+            <span data-hf-id="hf-0btl" class="detail">LLM picks best value, not cheapest bid.</span>
+          </div>
+          <div data-hf-id="hf-ktcl" class="flow-step">
+            <span data-hf-id="hf-dzej" class="num">04</span>
+            <span data-hf-id="hf-7ytq" class="title">Escrow settles</span>
+            <span data-hf-id="hf-hbek" class="detail">Real Anchor escrow, Solana devnet.</span>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-e2xg" id="e-disclosure" class="disclosure">
+          <div data-hf-id="hf-da74" class="disclosure-row">
+            <span data-hf-id="hf-yhro" class="mark">→</span>
+            <span data-hf-id="hf-0vrd" class="txt">Arbiter keypair <strong data-hf-id="hf-2c1f">isn't</strong> the program's on-chain admin — documented honestly.</span>
+          </div>
+          <div data-hf-id="hf-523c" class="disclosure-row">
+            <span data-hf-id="hf-xaul" class="mark">→</span>
+            <span data-hf-id="hf-cgbc" class="txt">Seller self-reports to Anicca's telemetry, tagged <span data-hf-id="hf-qu4n" class="mono">coralos-hackathon</span> —
+              net worth/revenue always <strong data-hf-id="hf-f0b2">0</strong>, devnet SOL is fake money.</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ SLIDE 5 — PROOF ============ -->
+    <div data-hf-id="hf-g41j" class="slide-root" data-composition-id="slide-5-proof" data-start="42" data-duration="12" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-y67j" id="frame-proof" class="clip frame" data-start="42" data-duration="12" data-track-index="1">
+        <div data-hf-id="hf-s3c3" class="topbar">
+          <span data-hf-id="hf-pd06" id="pr-kicker" class="kicker">Proof — This Slide Wins</span>
+          <span data-hf-id="hf-1d2e" class="slidenum mono">05 / 05</span>
+        </div>
+
+        <h1 data-hf-id="hf-kskt" id="pr-headline" class="headline small">
+          Two independent real settlements, Explorer-verified, both
+          <span data-hf-id="hf-69br" class="accent">Finalized.</span>
+        </h1>
+
+        <div data-hf-id="hf-vzvx" id="pr-txgrid" class="txgrid">
+          <div data-hf-id="hf-jv3q" class="txcard">
+            <span data-hf-id="hf-z2hx" class="badge">✓ FINALIZED</span>
+            <div data-hf-id="hf-u0vj" class="txlabel">Devnet TX 1</div>
+            <a data-hf-id="hf-2xpn" class="txhash" href="https://explorer.solana.com/tx/4p79RhXcw3iHdD2hbWZzasDPNuk9NbBvGnSLEqtCeG4mxTJ5wTLDAuiPuJgUcTfbXUQvzWzzFUt1qiY5NsbGczZU?cluster=devnet">4p79RhXcw3iHdD2hbWZzasDPNuk9NbBvGnSLEqtCeG4mxTJ5wTLDAuiPuJgUcTfbXUQvzWzzFUt1qiY5NsbGczZU</a>
+            <a data-hf-id="hf-u6iq" class="explorer-link" href="https://explorer.solana.com/tx/4p79RhXcw3iHdD2hbWZzasDPNuk9NbBvGnSLEqtCeG4mxTJ5wTLDAuiPuJgUcTfbXUQvzWzzFUt1qiY5NsbGczZU?cluster=devnet">↗ View on Solana Explorer (devnet)</a>
+          </div>
+          <div data-hf-id="hf-uqvu" class="txcard">
+            <span data-hf-id="hf-81q1" class="badge">✓ FINALIZED</span>
+            <div data-hf-id="hf-tmki" class="txlabel">Devnet TX 2</div>
+            <a data-hf-id="hf-u3ef" class="txhash" href="https://explorer.solana.com/tx/3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX?cluster=devnet">3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX</a>
+            <a data-hf-id="hf-3egv" class="explorer-link" href="https://explorer.solana.com/tx/3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX?cluster=devnet">↗ View on Solana Explorer (devnet)</a>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-xiqo" id="pr-evidence" class="evidence-strip">
+          <div data-hf-id="hf-rf6t" class="evidence-item">
+            <span data-hf-id="hf-sa1c" class="tag">Raw transcripts</span>
+            <p data-hf-id="hf-80xn" class="txt">
+              Both raw <span data-hf-id="hf-n83z" class="mono">solana confirm -v</span> transcripts persisted at
+              <span data-hf-id="hf-zcuz" class="mono">evidence/tx-confirmations.txt</span>.
+            </p>
+          </div>
+          <div data-hf-id="hf-dbsp" class="evidence-item">
+            <span data-hf-id="hf-naap" class="tag">Zero-human-key proof</span>
+            <p data-hf-id="hf-m7pu" class="quote">"Deep-dive analysis offers the highest value for contract data."</p>
+            <p data-hf-id="hf-a94o" class="txt">Real LLM completion, <span data-hf-id="hf-mqkn" class="mono">TRACE=1</span>, all human LLM keys empty.</p>
+          </div>
+          <div data-hf-id="hf-eips" class="evidence-item">
+            <span data-hf-id="hf-2h6i" class="tag">Review process</span>
+            <p data-hf-id="hf-jokb" class="txt">
+              3 rounds of fresh-context adversarial self-review — issues found were fixed, not
+              hidden — before this was shown to anyone.
+            </p>
+          </div>
+        </div>
+
+        <p data-hf-id="hf-fa6y" id="pr-live" class="proof-link">
+          This same agent is, right now, outside this demo — earning real money trading on
+          Polymarket. Live, public, verifiable: <a data-hf-id="hf-1pc2" href="https://aniccaai.com/dashboard">aniccaai.com/dashboard</a>
+        </p>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      function buildDeckTimeline(sceneId, entranceIds) {
+        var tl = gsap.timeline({ paused: true });
+        entranceIds.forEach(function (id, i) {
+          tl.from(
+            "#" + id,
+            { opacity: 0, y: 22, duration: 0.5, ease: "power2.out" },
+            0.15 + i * 0.12,
+          );
+        });
+        window.__timelines[sceneId] = tl;
+      }
+
+      buildDeckTimeline("slide-1-customer", ["c-kicker", "c-headline", "c-body", "c-callout"]);
+      buildDeckTimeline("slide-2-product", ["p-kicker", "p-headline", "p-body", "p-callout"]);
+      buildDeckTimeline("slide-3-why-they-pay", ["w-kicker", "w-headline", "w-body1", "w-body2", "w-callout"]);
+      buildDeckTimeline("slide-4-economy", ["e-kicker", "e-headline", "e-flow", "e-disclosure"]);
+      buildDeckTimeline("slide-5-proof", ["pr-kicker", "pr-headline", "pr-txgrid", "pr-evidence", "pr-live"]);
+    </script>
+  </body>
+</html>
