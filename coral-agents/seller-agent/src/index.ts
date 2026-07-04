@@ -120,7 +120,13 @@ await startCoralAgent({ agentName: NAME }, async (ctx) => {
         if (trace) console.error(`[${NAME}] ${text}`)
         const m = text.match(/round=(\d+)\s+sig=(\S+)/)
         if (m && SELLER_KEYPAIR_B58) {
-          await reportRound({ id: SELLER_WALLET, secretKeyB58: SELLER_KEYPAIR_B58, round: Number(m[1]), sig: m[2], host: NAME })
+          // aniccaai.com's telemetry endpoint enforces wallet=1 fixed identity (anti-squatting: a
+          // valid signature whose `host` doesn't match the wallet's pre-registered canonical name
+          // is rejected 400 host_wallet_mismatch, verified live). This wallet is shared by THREE
+          // seller personas (seller-worldcup/seller-fast/seller-premium, same SELLER_KEYPAIR_B58)
+          // — whichever one wins a round must report under the SAME fixed host, never its own
+          // per-persona NAME, or the server would see one wallet claiming 3 different hosts.
+          await reportRound({ id: SELLER_WALLET, secretKeyB58: SELLER_KEYPAIR_B58, round: Number(m[1]), sig: m[2], host: 'coralos-seller' })
         }
       }
     } catch (e) {
