@@ -10,7 +10,12 @@
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
 
-const TELEMETRY_URL = process.env.ANICCA_TELEMETRY_URL ?? 'https://aniccaai.com/.netlify/functions/telemetry'
+// `??` only falls through on null/undefined, not ''. coral-server injects a manifest-declared
+// option's toml `default = ""` into the container env whenever the caller omits that option from
+// the session request (verified live: this exact bug bit CLAWROUTER_URL's sibling here — round.ts
+// only forwards ANICCA_TELEMETRY_URL when there's a real override, so the container saw `''`, not
+// undefined). Same fix as packages/agent-runtime/complete.ts's LLM_MODEL bug: treat '' as unset.
+const TELEMETRY_URL = process.env.ANICCA_TELEMETRY_URL || 'https://aniccaai.com/.netlify/functions/telemetry'
 
 export interface RoundPayload {
   id: string

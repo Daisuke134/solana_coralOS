@@ -118,7 +118,10 @@ async function completeVenice(opts: CompleteOpts, model: string, maxTokens: numb
  * proxy runs on a non-default port.
  */
 async function completeClawRouter(opts: CompleteOpts, model: string, maxTokens: number): Promise<string> {
-  const url = process.env.CLAWROUTER_URL ?? 'http://localhost:8402/v1/chat/completions'
+  // '||' not '??' — an unset coral-agent.toml option can arrive as '' (empty string), not
+  // undefined, when a caller omits it from the session request (verified live, see
+  // coral-agents/seller-agent/src/telemetry.ts's identical fix for ANICCA_TELEMETRY_URL).
+  const url = process.env.CLAWROUTER_URL || 'http://localhost:8402/v1/chat/completions'
   return completeOpenAICompatible(opts, model, maxTokens, { url, key: '', label: 'ClawRouter' })
 }
 

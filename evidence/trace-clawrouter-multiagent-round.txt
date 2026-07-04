@@ -1,0 +1,40 @@
+Captured 2026-07-05, real Docker multi-agent round, TRACE=1, LLM_PROVIDER=clawrouter,
+OPENAI_API_KEY/ANTHROPIC_API_KEY/VENICE_API_KEY all empty in .env.
+Resolves adversary FIND-003/FIND-008 (no prior evidence that ClawRouter, not a silent
+deterministic fallback, was actually exercised in the multi-agent Docker round).
+
+=== buyer-agent container (a311ae253ba1) ===
+[buyer] market buyer - wallet=AJ99EemzNHpkdjpMJ9aXfLthvfQYkjSXUjYrQr3853MN budget=0.001 sellers=[seller-worldcup,seller-fast,seller-premium]
+[buyer] round 1: WANT anicca 0x810f6d61f7606deee2657d3083e150a222bc29c5 budget=0.001
+[llm] provider=clawrouter model=eco
+[llm] <- {"by": "seller-premium", "reason": "Deep-dive analysis offers the highest value for contract data."}
+[buyer] picked seller-premium (0.001 SOL): Deep-dive analysis offers the highest value for contract data.
+[buyer] round 1: DEPOSITED 0.001 SOL -> seller-premium
+[buyer]   escrow PDA: https://explorer.solana.com/address/FtcxwhytLc5jCCEJrqw7J4fkAZZxyrMrqPP3VAEkMSnY?cluster=devnet
+[buyer]   deposit tx: https://explorer.solana.com/tx/4J2RTuTVe68zcG59UXypHnRxMS64FS1yEEC7ewyaAQxqNvYUydWSHXnBsWBsdio8SYsLjUDtS4HAWhsJL1kjNX7n?cluster=devnet
+[buyer] round 1: RELEASED to seller-premium - https://explorer.solana.com/tx/3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX?cluster=devnet
+
+=== seller-fast container (38d35842f209) ===
+[seller-fast] ready: services=[anicca,txline] floor=0.00065 settlement=direct wallet=2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27
+[seller-fast] <- WANT round=1 service=anicca arg=0x810f6d61f7606deee2657d3083e150a222bc29c5 budget=0.001
+[llm] provider=clawrouter model=eco
+[llm] <- {"bid": true, "price": 0.001, "note": "Fast execution for Anicca data."}
+
+=== seller-premium container (18a9f6ccdb71, the round winner) ===
+[seller-premium] ready: services=[anicca,txline] floor=0.00085 settlement=direct wallet=2yTcHLZWT5VmMBF2iTAPtyTM3CcT2YW88PQFCt8E2y27
+[seller-premium] <- RELEASED round=1 sig=3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX settlement=direct
+[seller-premium] RELEASED round=1 sig=3okbZwoenNGBbrTufJdUZTDDqzgLte6njCMMf2KK7iGwSmDBihjZaiWM53PzmRCkKtEXkvs15HmBoJxEr5SmCFsX settlement=direct
+[telemetry] report error: Failed to parse URL from
+
+=== HONEST FINDING FROM THIS RUN ===
+The self-report (R6/C3) attempt FAILED here with "Failed to parse URL from" — a real bug,
+root-caused: coral-server injects a manifest-declared option's toml `default = ""` into the
+container env whenever round.ts's session request omits that option (which it does for
+ANICCA_TELEMETRY_URL when no override is configured) — so `process.env.ANICCA_TELEMETRY_URL`
+was the STRING '' inside the container, not undefined, and `?? default` does not fall through
+on ''. Same bug class as the earlier LLM_MODEL='' issue. FIXED in
+coral-agents/seller-agent/src/telemetry.ts (changed `??` to `||`) and, defensively, in
+packages/agent-runtime/src/llm/complete.ts's CLAWROUTER_URL resolution (same pattern, not yet
+proven to bite there since round.ts happens to always send a concrete value for it — fixed
+anyway for robustness). NOT yet re-verified live (this session ran out of disk immediately
+after finding this) — tracked as an open follow-up alongside task #21.
