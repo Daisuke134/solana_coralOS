@@ -1,5 +1,14 @@
 /**
- * LLMBuyerStrategy - the agent-economy primitive.
+ * LLMBuyerStrategy - a LEGACY x402-style (pay-per-HTTP-402-challenge) buying primitive.
+ *
+ * NOT part of the CoralOS round this repo submits (buyer-agent/src/index.ts, the WANT->BID->
+ * AWARD->DEPOSITED->DELIVERED->RELEASED loop, uses `pickWinner()`/`complete()` from
+ * `@pay/agent-runtime` directly — provider-agnostic, flips to ClawRouter via LLM_PROVIDER=
+ * clawrouter with no code change). This class hardcodes `new Anthropic()` (see `purchase()`
+ * below) because it predates the provider-agnostic `complete()` shim and was written for the
+ * DIFFERENT `examples/agent-economy/quickstart` demo (a single pay-and-fetch loop, not a
+ * multi-agent market). Kept here + tested (`buyer.test.ts`) as a reference implementation of
+ * the "agent decides whether to pay" pattern, not because the submission depends on it.
  *
  * Claude, given a goal, fetches a paid endpoint, discovers it needs payment (HTTP 402),
  * decides whether the price is worth it, signs a Solana transfer, and retries - all as

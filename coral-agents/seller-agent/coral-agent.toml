@@ -7,31 +7,35 @@ edition = 4
 [agent]
 name = "seller-agent"
 version = "0.1.0"
-description = "TxODDS marketplace seller. Bids on txline WANTs, verifies arbiter-funded escrow, and delivers a fair-line read."
-summary = "TypeScript TxODDS seller that competes in CoralOS and settles through arbiter-gated escrow."
-readme = "Bids in the shared market thread (WANT -> BID), issues ESCROW_REQUIRED with settlement=arbiter, verifies the funded vault escrow on DEPOSITED, then delivers the TxODDS read."
+description = "Marketplace seller. Bids on 'anicca' (R5 — Anicca's own real-net-worth/earnings service) and legacy 'txline' WANTs, verifies arbiter/direct-funded escrow, and delivers. Self-reports settled rounds to Anicca's own telemetry (R6)."
+summary = "TypeScript seller that competes in CoralOS, settles through the escrow, and self-reports."
+readme = "Bids in the shared market thread (WANT -> BID), issues ESCROW_REQUIRED, verifies the funded escrow on DEPOSITED, delivers via deliverService() ('anicca' or 'txline', see src/service.ts), and — if SELLER_KEYPAIR_B58 is set — self-reports the settled round to Anicca's own telemetry (src/telemetry.ts), always with net_worth_usd/revenue_mo_usd pinned to 0 since devnet SOL is not real money."
 
 [agent.license]
 type = "spdx"
 expression = "MIT"
 
 [options]
-SELLER_WALLET = { type = "string", description = "Devnet wallet pubkey that receives payments" }
+SELLER_WALLET = { type = "string", description = "Devnet wallet pubkey that receives payments (payout only)" }
 AGENT_NAME = { type = "string", default = "seller-agent", description = "Market identity for this seller persona" }
-SERVICES = { type = "string", default = "txline", description = "Inventory; the TxODDS demo uses txline" }
+SERVICES = { type = "string", default = "anicca,txline", description = "Inventory - comma-separated services this seller bids on (anicca = R5's real service; txline = the kit's own demo)" }
 FLOOR_SOL = { type = "f64", default = 0.0005, description = "Minimum bid in SOL" }
-PERSONA = { type = "string", default = "a TxODDS specialist selling verified fair-line reads", description = "Bidding persona" }
-SERVICE = { type = "string", default = "txline", description = "Delivery service; only txline is routed" }
+PERSONA = { type = "string", default = "a data seller offering Anicca's own verified net worth/earnings reads", description = "Bidding persona" }
+SERVICE = { type = "string", default = "anicca", description = "Delivery service: anicca (fixtures | odds <id> | edge <id> also still routed under txline) | txline" }
 SOLANA_RPC_URL = { type = "string", default = "", description = "Solana RPC URL" }
-SETTLEMENT_MODE = { type = "string", default = "arbiter", description = "arbiter (default) | direct legacy base escrow" }
+SETTLEMENT_MODE = { type = "string", default = "direct", description = "direct (default in this fork - see README for why arbiter mode throws NotArbiter with a freshly-generated arbiter key) | arbiter" }
 ESCROW_DEADLINE_SECS = { type = "f64", default = 600, description = "Refund deadline for escrow deposits (seconds)" }
 TXLINE_API_KEY = { type = "string", default = "", description = "Activated TxLINE API token" }
 TXLINE_BASE_URL = { type = "string", default = "", description = "Override the TxLINE host" }
+ANICCA_DASHBOARD_URL = { type = "string", default = "", description = "Override the Anicca leaderboard URL the 'anicca' service reads (default https://aniccaai.com/dashboard.json)" }
+SELLER_KEYPAIR_B58 = { type = "string", default = "", description = "R6 self-report: the seller's OWN signing key (separate from SELLER_WALLET's payout address). If unset, self-report is skipped." }
+ANICCA_TELEMETRY_URL = { type = "string", default = "", description = "Override the Anicca telemetry POST endpoint (default https://aniccaai.com/.netlify/functions/telemetry)" }
 ANTHROPIC_API_KEY = { type = "string", default = "", description = "Anthropic key for live reads" }
 OPENAI_API_KEY = { type = "string", default = "", description = "OpenAI key; set LLM_PROVIDER=openai to use it" }
 VENICE_API_KEY = { type = "string", default = "", description = "Venice AI key (OpenAI-compatible, free credits); set LLM_PROVIDER=venice to use it" }
-LLM_PROVIDER = { type = "string", default = "", description = "anthropic (default) | openai | venice" }
+LLM_PROVIDER = { type = "string", default = "", description = "anthropic (default) | openai | venice | clawrouter" }
 LLM_MODEL = { type = "string", default = "", description = "Override the LLM model id" }
+CLAWROUTER_URL = { type = "string", default = "", description = "ClawRouter zero-human-key proxy endpoint (LLM_PROVIDER=clawrouter); defaults to http://host.docker.internal:8402/v1/chat/completions" }
 TRACE = { type = "string", default = "", description = "Set to 1 to log settlement checks" }
 
 [runtimes.docker]

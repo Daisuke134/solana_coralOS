@@ -42,8 +42,14 @@ export function buildRoundPayload(args: { id: string; round: number; sig: string
   }
 }
 
-// Same field order/shape as apps/landing/netlify/functions/_lib/telemetry-verify.js::canonicalMessage
-// — the two codebases must agree byte-for-byte on what gets signed, or the real verifier 401s.
+// The real verifier (apps/landing/netlify/functions/_lib/telemetry-verify.js) does NOT recompute
+// a canonical form to compare against — it parses OUR exact `message` bytes, recovers the signer
+// from them directly, and runs telemetry-schema.js's validate() against the parsed object. So the
+// actual requirement is narrower than "byte-for-byte agreement": this object's REQUIRED keys (id,
+// ts, host, geo, model_live, model_tier, net_worth_usd, revenue_mo_usd, burn_day_usd, runway_days,
+// status) and correctly-typed OPTIONAL keys (chain, tags, log_feed) must satisfy that schema —
+// there is no cross-repo import to type-check this against, so it is verified by disciplined
+// manual cross-reference with the field list in that file, re-checked below in the test.
 export function canonicalMessage(p: RoundPayload): string {
   const m: Record<string, unknown> = {
     id: p.id, ts: p.ts, host: p.host, geo: p.geo, model_live: p.model_live,

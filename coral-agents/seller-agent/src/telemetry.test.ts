@@ -68,13 +68,25 @@ describe('reportRound (S-C3.3, S-C3.5 — real ed25519 sign, never throws)', () 
   })
 })
 
-describe('canonicalMessage (regression guard vs apps/landing telemetry-verify.js field order)', () => {
-  it('produces the exact field set the aniccaai.com verifier expects', () => {
+// NOT a cross-repo verification (no import of apps/landing's code exists or is possible from this
+// package) — this is a manual cross-reference checklist against telemetry-schema.js's required/
+// optional field list, re-checked by hand whenever that schema changes. A missing REQUIRED key
+// here would make the real verifier's validate() reject every report with reason:"schema".
+describe('canonicalMessage field checklist (manual cross-reference with telemetry-schema.js, not an automated cross-repo check)', () => {
+  it('includes every REQUIRED field telemetry-schema.js::validate() checks', () => {
     const msg = canonicalMessage(buildRoundPayload({ id: ID, round: 1, sig: 'x', host: 'coralos-devnet' }))
     const parsed = JSON.parse(msg)
     for (const k of ['id', 'ts', 'host', 'geo', 'model_live', 'model_tier', 'net_worth_usd',
-      'revenue_mo_usd', 'burn_day_usd', 'runway_days', 'status', 'chain', 'tags', 'log_feed']) {
+      'revenue_mo_usd', 'burn_day_usd', 'runway_days', 'status']) {
       expect(parsed).toHaveProperty(k)
     }
+  })
+
+  it('includes the additive OPTIONAL fields this report actually uses (chain, tags, log_feed)', () => {
+    const msg = canonicalMessage(buildRoundPayload({ id: ID, round: 1, sig: 'x', host: 'coralos-devnet' }))
+    const parsed = JSON.parse(msg)
+    expect(parsed.chain).toBe('solana')
+    expect(Array.isArray(parsed.tags)).toBe(true)
+    expect(Array.isArray(parsed.log_feed)).toBe(true)
   })
 })
