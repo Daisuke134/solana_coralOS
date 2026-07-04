@@ -16,9 +16,13 @@ import {
 import { decideBid, sellerConfigFromEnv } from './bidder.js'
 import { makeProgram, isFunded } from './escrow.js'
 import { deliverService } from './service.js'
+import { reportRound } from './telemetry.js'
 
 const NAME = process.env.AGENT_NAME ?? 'seller-agent'
 const SELLER_WALLET = process.env.SELLER_WALLET ?? ''
+// Own signing key for the self-report (R6) — separate from SELLER_WALLET (payout address only).
+// Optional: if unset, the seller just skips self-reporting (never blocks settlement on its absence).
+const SELLER_KEYPAIR_B58 = process.env.SELLER_KEYPAIR_B58 ?? ''
 const RPC = process.env.SOLANA_RPC_URL ?? 'https://api.devnet.solana.com'
 const ESCROW_DEADLINE_SECS = Number(process.env.ESCROW_DEADLINE_SECS ?? '600')
 const SETTLEMENT_MODE = (process.env.SETTLEMENT_MODE ?? 'arbiter').toLowerCase() === 'direct' ? 'direct' : 'arbiter'
@@ -114,6 +118,10 @@ await startCoralAgent({ agentName: NAME }, async (ctx) => {
 
       if (verb(text) === 'ARBITER_RELEASED' || verb(text) === 'RELEASED') {
         if (trace) console.error(`[${NAME}] ${text}`)
+        const m = text.match(/round=(\d+)\s+sig=(\S+)/)
+        if (m && SELLER_KEYPAIR_B58) {
+          await reportRound({ id: SELLER_WALLET, secretKeyB58: SELLER_KEYPAIR_B58, round: Number(m[1]), sig: m[2], host: NAME })
+        }
       }
     } catch (e) {
       console.error(`[${NAME}] loop error: ${e}`)

@@ -30,6 +30,8 @@ LLM_PROVIDER = { type = "string", default = "", description = "anthropic (defaul
 LLM_MODEL = { type = "string", default = "", description = "Override the LLM model id" }
 CLAWROUTER_URL = { type = "string", default = "", description = "ClawRouter zero-human-key proxy endpoint (LLM_PROVIDER=clawrouter); defaults to http://host.docker.internal:8402/v1/chat/completions" }
 ANICCA_DASHBOARD_URL = { type = "string", default = "", description = "Override the Anicca leaderboard URL the 'anicca' service reads (default https://aniccaai.com/dashboard.json)" }
+SELLER_KEYPAIR_B58 = { type = "string", default = "", description = "R6 self-report: the seller's OWN signing key (separate from SELLER_WALLET's payout address). If unset, self-report is skipped." }
+ANICCA_TELEMETRY_URL = { type = "string", default = "", description = "Override the Anicca telemetry POST endpoint (default https://aniccaai.com/.netlify/functions/telemetry)" }
 INFERENCE_MODEL = { type = "string", default = "", description = "Model for the edge's Claude call (default claude-opus-4-8)" }
 TRACE = { type = "string", default = "", description = "Set to 1 to log CoralOS calls + on-chain steps" }
 

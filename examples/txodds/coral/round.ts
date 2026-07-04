@@ -89,6 +89,10 @@ async function main(): Promise<void> {
     SETTLEMENT_MODE: str('direct'), TXLINE_API_KEY: str(env.TXLINE_API_KEY),
     ...(env.TXLINE_BASE_URL ? { TXLINE_BASE_URL: str(env.TXLINE_BASE_URL) } : {}),
     ...(env.ANICCA_DASHBOARD_URL ? { ANICCA_DASHBOARD_URL: str(env.ANICCA_DASHBOARD_URL) } : {}),
+    // R6: self-report a settled round to Anicca's own telemetry (own signing key, separate from
+    // the payout-only SELLER_WALLET). Optional — the seller just skips reporting if unset.
+    ...(env.SELLER_KEYPAIR_B58 ? { SELLER_KEYPAIR_B58: str(env.SELLER_KEYPAIR_B58) } : {}),
+    ...(env.ANICCA_TELEMETRY_URL ? { ANICCA_TELEMETRY_URL: str(env.ANICCA_TELEMETRY_URL) } : {}),
     ...llm,
   })
   const specialist = agent('seller-worldcup', sellerOpts(
